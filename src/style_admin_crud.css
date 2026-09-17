@@ -1,0 +1,258 @@
+/* =========================================================
+   ADMIN CRUD / FORM POLISH
+========================================================= */
+
+.modalBg {
+  position: fixed !important;
+  inset: 0 !important;
+  z-index: 5000 !important;
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  padding: 24px !important;
+  background: rgba(20, 29, 32, .30) !important;
+}
+
+.modalCard {
+  position: relative !important;
+  width: min(680px, 100%) !important;
+  max-height: calc(100vh - 48px) !important;
+  overflow-y: auto !important;
+  padding: 28px !important;
+  box-sizing: border-box !important;
+  background: #fff !important;
+  border: 1px solid #dfe4e2 !important;
+  border-radius: 12px !important;
+  box-shadow: 0 20px 60px rgba(20, 29, 32, .16) !important;
+}
+
+.modalClose {
+  position: absolute !important;
+  top: 15px !important;
+  right: 15px !important;
+  width: 32px !important;
+  height: 32px !important;
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  padding: 0 !important;
+  background: #fff !important;
+  border: 1px solid #dfe4e2 !important;
+  border-radius: 7px !important;
+  color: #66716f !important;
+  cursor: pointer !important;
+}
+
+.modalCard > small {
+  display: block !important;
+  margin-bottom: 7px !important;
+  color: #899390 !important;
+  font-size: 8px !important;
+  letter-spacing: 1.1px !important;
+}
+
+.modalCard h2 {
+  margin: 0 0 8px !important;
+  color: #1e292d !important;
+  font-size: 22px !important;
+}
+
+.modalCard > p {
+  margin: 0 0 24px !important;
+  color: #71807c !important;
+  font-size: 10px !important;
+  line-height: 1.5 !important;
+}
+
+.modalCard form {
+  width: 100% !important;
+  display: grid !important;
+  grid-template-columns: repeat(2, minmax(0, 1fr)) !important;
+  gap: 17px 18px !important;
+}
+
+.modalCard form > label {
+  min-width: 0 !important;
+  display: flex !important;
+  flex-direction: column !important;
+  gap: 7px !important;
+  color: #465451 !important;
+  font-size: 9px !important;
+  font-weight: 600 !important;
+}
+
+.modalCard form > label input,
+.modalCard form > label select,
+.modalCard form > label textarea {
+  width: 100% !important;
+  min-height: 40px !important;
+  box-sizing: border-box !important;
+  padding: 0 11px !important;
+  background: #fff !important;
+  border: 1px solid #d9dfdd !important;
+  border-radius: 7px !important;
+  color: #273236 !important;
+  font-size: 10px !important;
+  outline: none !important;
+}
+
+.modalCard form > label textarea {
+  min-height: 120px !important;
+  padding: 10px 11px !important;
+  resize: vertical !important;
+}
+
+.modalCard form > label input:focus,
+.modalCard form > label select:focus,
+.modalCard form > label textarea:focus {
+  border-color: #71807c !important;
+  box-shadow: 0 0 0 3px rgba(31, 45, 50, .06) !important;
+}
+
+.modalCard form > label.fullWidth {
+  grid-column: 1 / -1 !important;
+}
+
+.modalActions {
+  grid-column: 1 / -1 !important;
+  display: flex !important;
+  justify-content: flex-end !important;
+  align-items: center !important;
+  gap: 9px !important;
+  margin-top: 5px !important;
+  padding-top: 8px !important;
+}
+
+.saveButton,
+.darkButton {
+  min-height: 38px !important;
+  display: inline-flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  gap: 6px !important;
+  padding: 0 15px !important;
+  border-radius: 7px !important;
+  font-size: 9px !important;
+  font-weight: 600 !important;
+  cursor: pointer !important;
+}
+
+.saveButton {
+  background: #fff !important;
+  border: 1px solid #dfe4e2 !important;
+  color: #63706d !important;
+}
+
+.darkButton {
+  background: #1f2d32 !important;
+  border: 1px solid #1f2d32 !important;
+  color: #fff !important;
+}
+
+/* CRUD rows */
+.rowActions {
+  margin-left: auto !important;
+  display: flex !important;
+  align-items: center !important;
+  gap: 6px !important;
+  flex-shrink: 0 !important;
+}
+
+.rowActions button {
+  width: 32px !important;
+  height: 32px !important;
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  padding: 0 !important;
+  background: #fff !important;
+  border: 1px solid #dfe4e2 !important;
+  border-radius: 6px !important;
+  color: #65716e !important;
+  cursor: pointer !important;
+}
+
+.rowActions .deleteButton {
+  color: #a45c5c !important;
+  border-color: #e4cccc !important;
+}
+
+/* Reports: keep the clickable main area and CRUD actions separate. */
+.reportRow {
+  display: flex !important;
+  align-items: center !important;
+  gap: 8px !important;
+  padding: 0 !important;
+  overflow: hidden !important;
+}
+
+.reportRowMainButton {
+  flex: 1 1 auto !important;
+  min-width: 0 !important;
+  min-height: 84px !important;
+  display: grid !important;
+  grid-template-columns: 48px minmax(160px, 1fr) minmax(140px, .7fr) 110px 20px !important;
+  align-items: center !important;
+  gap: 14px !important;
+  padding: 15px 10px 15px 17px !important;
+  background: transparent !important;
+  border: 0 !important;
+  color: inherit !important;
+  text-align: left !important;
+  cursor: pointer !important;
+}
+
+.reportRowMainButton:hover {
+  background: #fafbfa !important;
+}
+
+.reportRow > .rowActions {
+  padding-right: 14px !important;
+}
+
+.templateActions {
+  display: flex !important;
+  gap: 7px !important;
+  margin-top: 14px !important;
+}
+
+.templateActions button {
+  min-height: 32px !important;
+  display: inline-flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  gap: 5px !important;
+  padding: 0 10px !important;
+  background: #fff !important;
+  border: 1px solid #dfe4e2 !important;
+  border-radius: 6px !important;
+  color: #53615e !important;
+  font-size: 8px !important;
+  cursor: pointer !important;
+}
+
+.templateActions .templateDeleteButton {
+  color: #a45c5c !important;
+  border-color: #e4cccc !important;
+}
+
+@media (max-width: 800px) {
+  .modalBg { padding: 14px !important; }
+  .modalCard {
+    max-height: calc(100vh - 28px) !important;
+    padding: 22px !important;
+  }
+  .modalCard form { grid-template-columns: 1fr !important; }
+  .modalCard form > label.fullWidth { grid-column: auto !important; }
+  .modalActions {
+    flex-direction: column-reverse !important;
+    align-items: stretch !important;
+  }
+  .modalActions button { width: 100% !important; }
+  .reportRowMainButton {
+    grid-template-columns: 42px 1fr 20px !important;
+    min-height: 76px !important;
+  }
+  .reportRowMainButton .reportTech,
+  .reportRowMainButton .status { display: none !important; }
+}

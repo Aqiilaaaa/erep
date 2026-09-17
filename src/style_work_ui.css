@@ -1,0 +1,501 @@
+
+/* =========================================================
+   INTERNAL WORK SYSTEM UI
+   Clean / compact / corporate — intentionally restrained.
+========================================================= */
+
+:root {
+  --ui-blue: #1f5fae;
+  --ui-blue-dark: #174b8b;
+  --ui-blue-soft: #eef5fc;
+  --ui-border: #d9e0e8;
+  --ui-border-dark: #c7d0da;
+  --ui-text: #26323d;
+  --ui-muted: #697684;
+  --ui-bg: #f5f7f9;
+  --ui-white: #ffffff;
+  --ui-success: #2e7d52;
+  --ui-warning: #a66b00;
+  --ui-danger: #b44343;
+  --ui-radius: 6px;
+  --ui-shadow: 0 1px 3px rgba(25, 40, 55, .08);
+}
+
+html, body {
+  font-size: 14px;
+}
+
+body {
+  background: var(--ui-bg) !important;
+  color: var(--ui-text) !important;
+  font-family: Inter, "Segoe UI", Arial, sans-serif !important;
+  letter-spacing: 0 !important;
+}
+
+/* Never make an internal work system look like a marketing website. */
+h1, h2, h3, h4, h5, h6,
+button, .navButton, .menuSignOut, .sectionHeader small,
+.topbarSubtitle, .badge, .statusBadge {
+  text-transform: none !important;
+  letter-spacing: 0 !important;
+}
+
+h1 { font-size: 23px !important; line-height: 1.3 !important; }
+h2 { font-size: 18px !important; line-height: 1.35 !important; }
+h3 { font-size: 15px !important; line-height: 1.4 !important; }
+h4 { font-size: 14px !important; }
+
+/* Main shell */
+main {
+  background: var(--ui-bg) !important;
+}
+
+.content {
+  width: min(1180px, calc(100% - 40px)) !important;
+  max-width: 1180px !important;
+  margin: 0 auto !important;
+  padding: 26px 0 40px !important;
+}
+
+/* Header / top bar */
+.topbar,
+.topBar {
+  min-height: 58px !important;
+  padding: 0 0 18px !important;
+  margin-bottom: 20px !important;
+  border-bottom: 1px solid var(--ui-border) !important;
+}
+
+.topbar h1,
+.topBar h1 {
+  margin: 0 !important;
+  font-size: 21px !important;
+  font-weight: 600 !important;
+  color: #202b35 !important;
+}
+
+.topbar p,
+.topbar small,
+.topbar .subtitle,
+.topBar p,
+.topBar small {
+  font-size: 12px !important;
+  color: var(--ui-muted) !important;
+  margin-top: 4px !important;
+}
+
+/* Sidebar */
+.sidebar,
+.menu {
+  background: #fff !important;
+  border-right: 1px solid var(--ui-border) !important;
+  box-shadow: none !important;
+}
+
+.navButton,
+.menuSignOut {
+  min-height: 38px !important;
+  padding: 8px 11px !important;
+  border-radius: 5px !important;
+  font-size: 13px !important;
+  font-weight: 400 !important;
+  color: #4c5966 !important;
+}
+
+.navButton:hover,
+.menuSignOut:hover {
+  background: #f3f6f9 !important;
+  color: #1f5fae !important;
+}
+
+.navButton.active {
+  background: #edf4fb !important;
+  color: var(--ui-blue) !important;
+  font-weight: 500 !important;
+  box-shadow: inset 3px 0 0 var(--ui-blue) !important;
+}
+
+.menuDivider {
+  margin: 12px 0 !important;
+  border-color: var(--ui-border) !important;
+}
+
+.logo,
+.logoArea {
+  font-size: 16px !important;
+  font-weight: 600 !important;
+}
+
+/* Buttons */
+button {
+  font-family: inherit !important;
+}
+
+.primaryButton,
+.darkButton,
+.saveButton,
+.submitButton {
+  min-height: 36px !important;
+  padding: 8px 13px !important;
+  border-radius: 5px !important;
+  border: 1px solid var(--ui-blue) !important;
+  background: var(--ui-blue) !important;
+  box-shadow: none !important;
+  font-size: 13px !important;
+  font-weight: 500 !important;
+}
+
+.primaryButton:hover,
+.darkButton:hover,
+.saveButton:hover,
+.submitButton:hover {
+  background: var(--ui-blue-dark) !important;
+}
+
+.secondaryButton,
+.cancelButton {
+  min-height: 36px !important;
+  padding: 8px 13px !important;
+  border-radius: 5px !important;
+  font-size: 13px !important;
+  background: #fff !important;
+  border: 1px solid var(--ui-border-dark) !important;
+  color: #46525e !important;
+  box-shadow: none !important;
+}
+
+/* Cards */
+.card,
+.dashboardCard,
+.reportCard,
+.infoCard,
+.formCard,
+.accountCard,
+.signatureCard,
+.jobCard,
+.userRow,
+.templateCard,
+.statCard {
+  border: 1px solid var(--ui-border) !important;
+  border-radius: var(--ui-radius) !important;
+  background: #fff !important;
+  box-shadow: var(--ui-shadow) !important;
+}
+
+.card:hover,
+.reportCard:hover,
+.jobCard:hover,
+.userRow:hover {
+  box-shadow: 0 2px 6px rgba(25, 40, 55, .10) !important;
+  transform: none !important;
+}
+
+/* Dashboard */
+.dashboardWelcome,
+.welcomeCard {
+  background: #fff !important;
+  border: 1px solid var(--ui-border) !important;
+  border-radius: var(--ui-radius) !important;
+  box-shadow: var(--ui-shadow) !important;
+  padding: 20px !important;
+}
+
+.dashboardWelcome h1,
+.welcomeCard h1 {
+  font-size: 20px !important;
+  font-weight: 600 !important;
+}
+
+.dashboardWelcome p,
+.welcomeCard p {
+  font-size: 13px !important;
+  color: var(--ui-muted) !important;
+}
+
+.statCard {
+  padding: 15px !important;
+}
+
+.statCard .value,
+.statValue {
+  font-size: 21px !important;
+  font-weight: 600 !important;
+}
+
+.statCard .label,
+.statLabel {
+  font-size: 12px !important;
+  color: var(--ui-muted) !important;
+}
+
+/* Section headings */
+.sectionHeader {
+  margin: 22px 0 12px !important;
+}
+
+.sectionHeader small {
+  display: block !important;
+  font-size: 11px !important;
+  font-weight: 500 !important;
+  color: #7a8793 !important;
+  margin-bottom: 4px !important;
+}
+
+.sectionHeader h2 {
+  margin: 0 !important;
+  font-size: 17px !important;
+  font-weight: 600 !important;
+}
+
+/* Forms */
+label,
+.formLabel {
+  font-size: 12px !important;
+  font-weight: 500 !important;
+  color: #46535f !important;
+}
+
+input,
+select,
+textarea {
+  min-height: 36px;
+  border: 1px solid var(--ui-border-dark) !important;
+  border-radius: 5px !important;
+  background: #fff !important;
+  color: #2d3842 !important;
+  font-size: 13px !important;
+  box-shadow: none !important;
+}
+
+input,
+select {
+  padding: 8px 10px !important;
+}
+
+textarea {
+  padding: 9px 10px !important;
+}
+
+input::placeholder,
+textarea::placeholder {
+  color: #9aa5af !important;
+}
+
+input:focus,
+select:focus,
+textarea:focus {
+  border-color: #7da7d4 !important;
+  outline: 2px solid rgba(31, 95, 174, .08) !important;
+  box-shadow: none !important;
+}
+
+/* Report list */
+.reportList,
+.userList,
+.jobList {
+  gap: 8px !important;
+}
+
+.reportCard,
+.jobCard,
+.userRow {
+  padding: 13px 15px !important;
+}
+
+.reportCard h3,
+.jobCard h3,
+.userRow h3 {
+  font-size: 14px !important;
+  font-weight: 600 !important;
+  color: #29343e !important;
+}
+
+.reportCard p,
+.jobCard p,
+.userRow p {
+  font-size: 12px !important;
+  color: var(--ui-muted) !important;
+}
+
+/* Status */
+.statusBadge,
+.badge {
+  padding: 3px 8px !important;
+  border-radius: 4px !important;
+  font-size: 11px !important;
+  font-weight: 500 !important;
+}
+
+/* Search / toolbar */
+.adminPageToolbar,
+.reportToolbar,
+.toolbar {
+  gap: 8px !important;
+  margin-bottom: 14px !important;
+}
+
+.adminSearch,
+.searchBox,
+.reportSearch {
+  min-height: 36px !important;
+  border: 1px solid var(--ui-border-dark) !important;
+  border-radius: 5px !important;
+  background: #fff !important;
+}
+
+.adminSearch input,
+.searchBox input,
+.reportSearch input {
+  border: 0 !important;
+  outline: 0 !important;
+  box-shadow: none !important;
+}
+
+/* Tables */
+table {
+  width: 100%;
+  border-collapse: collapse;
+  background: #fff;
+  border: 1px solid var(--ui-border);
+  font-size: 13px;
+}
+
+th {
+  background: #f6f8fa !important;
+  color: #53606c !important;
+  font-size: 11px !important;
+  font-weight: 600 !important;
+  text-align: left;
+  padding: 10px 12px !important;
+  border-bottom: 1px solid var(--ui-border) !important;
+  text-transform: none !important;
+}
+
+td {
+  padding: 10px 12px !important;
+  border-bottom: 1px solid #edf0f3 !important;
+  color: #36424d !important;
+}
+
+/* Modals */
+.modalBackdrop,
+.modalOverlay {
+  background: rgba(27, 38, 49, .38) !important;
+  backdrop-filter: none !important;
+}
+
+.modal,
+.modalContent {
+  border: 1px solid var(--ui-border) !important;
+  border-radius: 7px !important;
+  box-shadow: 0 10px 30px rgba(20, 35, 50, .18) !important;
+  background: #fff !important;
+}
+
+.modal h2,
+.modalContent h2 {
+  font-size: 17px !important;
+  font-weight: 600 !important;
+}
+
+/* Login */
+.loginPage {
+  background: #f3f6f9 !important;
+}
+
+.loginCard {
+  width: min(390px, calc(100% - 32px)) !important;
+  border: 1px solid var(--ui-border) !important;
+  border-radius: 7px !important;
+  box-shadow: 0 3px 12px rgba(25, 40, 55, .10) !important;
+  padding: 26px !important;
+}
+
+.loginCard h1 {
+  font-size: 20px !important;
+  font-weight: 600 !important;
+}
+
+.loginCard p {
+  font-size: 12px !important;
+  color: var(--ui-muted) !important;
+}
+
+/* Account */
+.accountHero,
+.accountHeader,
+.reportHero {
+  background: #fff !important;
+  border: 1px solid var(--ui-border) !important;
+  border-radius: var(--ui-radius) !important;
+  box-shadow: var(--ui-shadow) !important;
+}
+
+.accountHero h1,
+.accountHeader h1,
+.reportHero h1 {
+  font-size: 20px !important;
+  font-weight: 600 !important;
+}
+
+/* Notifications */
+.notificationDropdown,
+.notificationPanel {
+  border: 1px solid var(--ui-border) !important;
+  border-radius: 6px !important;
+  box-shadow: 0 5px 18px rgba(25, 40, 55, .14) !important;
+}
+
+.notificationItem {
+  font-size: 12px !important;
+  border-bottom: 1px solid #edf0f3 !important;
+}
+
+/* Icons should support the interface, not dominate it. */
+svg {
+  stroke-width: 1.8;
+}
+
+/* Compact desktop spacing */
+@media (max-width: 900px) {
+  .content {
+    width: calc(100% - 28px) !important;
+    padding-top: 20px !important;
+  }
+}
+
+@media (max-width: 620px) {
+  html, body {
+    font-size: 13px;
+  }
+
+  .content {
+    width: calc(100% - 20px) !important;
+    padding: 16px 0 28px !important;
+  }
+
+  h1 {
+    font-size: 19px !important;
+  }
+
+  h2 {
+    font-size: 16px !important;
+  }
+
+  .topbar,
+  .topBar {
+    padding-bottom: 14px !important;
+    margin-bottom: 15px !important;
+  }
+
+  .primaryButton,
+  .darkButton,
+  .saveButton,
+  .submitButton,
+  .secondaryButton,
+  .cancelButton {
+    min-height: 34px !important;
+    padding: 7px 10px !important;
+    font-size: 12px !important;
+  }
+}

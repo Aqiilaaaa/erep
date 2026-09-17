@@ -1,0 +1,2645 @@
+* {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+  font-family: Arial, sans-serif;
+  color: #202425;
+  background: #f5f6f4;
+}
+
+button,
+input,
+select {
+  font: inherit;
+}
+
+button {
+  cursor: pointer;
+}
+
+
+/* =========================
+   LOGIN
+========================= */
+
+.loginPage {
+  min-height: 100vh;
+  display: grid;
+  place-items: center;
+  padding: 20px;
+  background: #f5f6f4;
+}
+
+.loginCard {
+  width: 390px;
+  max-width: 100%;
+  background: white;
+  border: 1px solid #dedfdb;
+  border-radius: 10px;
+  padding: 30px;
+}
+
+.loginLogo {
+  width: 38px;
+  height: 38px;
+  background: #1f2c30;
+  color: white;
+  border-radius: 8px;
+  display: grid;
+  place-items: center;
+  font-weight: bold;
+  margin-bottom: 20px;
+}
+
+.loginBrand {
+  font-size: 7px;
+  color: #999;
+  letter-spacing: 1px;
+}
+
+.loginCard h1 {
+  font-size: 22px;
+  margin: 7px 0;
+}
+
+.loginCard > p {
+  font-size: 8px;
+  color: #888;
+  margin-bottom: 22px;
+}
+
+.loginCard label {
+  display: block;
+  font-size: 8px;
+  color: #555;
+  margin-bottom: 13px;
+}
+
+.loginCard input {
+  width: 100%;
+  height: 38px;
+  margin-top: 5px;
+  padding: 0 10px;
+  border: 1px solid #ddd;
+  border-radius: 6px;
+  outline: none;
+  font-size: 8px;
+}
+
+.loginCard input:focus {
+  border-color: #64777b;
+}
+
+.loginButton {
+  width: 100%;
+  height: 38px;
+  border: 0;
+  border-radius: 6px;
+  background: #1f2c30;
+  color: white;
+  font-size: 8px;
+  font-weight: bold;
+}
+
+.loginError {
+  color: #9b4d45;
+  background: #f9eeee;
+  padding: 8px;
+  border-radius: 5px;
+  font-size: 7px;
+  margin-bottom: 8px;
+}
+
+.demoAccounts {
+  border-top: 1px solid #eee;
+  margin-top: 20px;
+  padding-top: 14px;
+}
+
+.demoAccounts b,
+.demoAccounts span {
+  display: block;
+}
+
+.demoAccounts b {
+  font-size: 7px;
+  margin-bottom: 6px;
+}
+
+.demoAccounts span {
+  color: #999;
+  font-size: 7px;
+  margin-top: 3px;
+}
+
+
+/* =========================
+   SIDEBAR
+========================= */
+
+.sidebar {
+  position: fixed;
+  left: 0;
+  top: 0;
+  bottom: 0;
+  width: 225px;
+  background: white;
+  border-right: 1px solid #dedfdb;
+  padding: 25px 17px;
+  display: flex;
+  flex-direction: column;
+  z-index: 20;
+}
+
+.brand {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 0 8px 25px;
+}
+
+.brandLogo {
+  width: 32px;
+  height: 32px;
+  border-radius: 8px;
+  background: #1f2c30;
+  color: white;
+  display: grid;
+  place-items: center;
+  font-weight: bold;
+}
+
+.brand b {
+  display: block;
+  font-size: 12px;
+}
+
+.brand small {
+  display: block;
+  color: #999;
+  font-size: 7px;
+  margin-top: 3px;
+  letter-spacing: 1px;
+}
+
+.mobileClose {
+  display: none;
+}
+
+.profile {
+  border-top: 1px solid #eee;
+  border-bottom: 1px solid #eee;
+  padding: 14px 8px;
+  display: flex;
+  gap: 9px;
+  align-items: center;
+}
+
+.avatar {
+  width: 30px;
+  height: 30px;
+  background: #e5eaea;
+  border-radius: 50%;
+  display: grid;
+  place-items: center;
+  font-size: 9px;
+  font-weight: bold;
+}
+
+.profile b {
+  display: block;
+  font-size: 9px;
+}
+
+.profile small {
+  display: block;
+  color: #999;
+  font-size: 7px;
+  margin-top: 3px;
+}
+
+nav {
+  padding-top: 14px;
+}
+
+nav button,
+.sidebarBottom button {
+  width: 100%;
+  border: 0;
+  background: transparent;
+  padding: 10px 9px;
+  border-radius: 6px;
+  display: flex;
+  align-items: center;
+  gap: 9px;
+  color: #707472;
+  font-size: 8px;
+  text-align: left;
+}
+
+nav button:hover,
+nav button.active,
+.sidebarBottom button:hover {
+  background: #eef2f1;
+  color: #1f2c30;
+}
+
+.sidebarBottom {
+  margin-top: auto;
+}
+
+
+/* =========================
+   MAIN
+========================= */
+
+main {
+  margin-left: 225px;
+  min-height: 100vh;
+}
+
+.mobileHeader {
+  display: none;
+}
+
+.content {
+  max-width: 1200px;
+  margin: auto;
+  padding: 30px 40px 60px;
+}
+
+
+/* =========================
+   TOP BAR
+========================= */
+
+.topBar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 25px;
+}
+
+.topBar small {
+  color: #999;
+  font-size: 7px;
+  letter-spacing: 1px;
+}
+
+.topBar h1 {
+  font-size: 22px;
+  margin: 5px 0 0;
+}
+
+.topActions {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.notification {
+  width: 35px;
+  height: 35px;
+  background: white;
+  border: 1px solid #ddd;
+  border-radius: 6px;
+  display: grid;
+  place-items: center;
+}
+
+
+/* =========================
+   BUTTONS
+========================= */
+
+.darkButton {
+  border: 0;
+  background: #1f2c30;
+  color: white;
+  border-radius: 6px;
+  padding: 9px 12px;
+  font-size: 8px;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.backButton {
+  border: 0;
+  background: transparent;
+  color: #607176;
+  font-size: 8px;
+  margin-bottom: 18px;
+}
+
+
+/* =========================
+   DASHBOARD
+========================= */
+
+.welcome {
+  background: #e9eeee;
+  border: 1px solid #d9e0df;
+  border-radius: 10px;
+  padding: 22px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 28px;
+}
+
+.welcome small {
+  font-size: 7px;
+  color: #888;
+}
+
+.welcome h2 {
+  font-size: 16px;
+  margin: 6px 0;
+}
+
+.welcome p {
+  font-size: 8px;
+  color: #707572;
+  margin: 0;
+}
+
+.quickStats {
+  display: flex;
+  gap: 25px;
+}
+
+.quickStats div {
+  border-left: 1px solid #cbd2d1;
+  padding-left: 18px;
+}
+
+.quickStats b {
+  display: block;
+  font-size: 20px;
+}
+
+.quickStats span {
+  font-size: 7px;
+  color: #777;
+}
+
+.sectionHeader {
+  margin: 25px 0 10px;
+}
+
+.sectionHeader small {
+  color: #999;
+  font-size: 7px;
+  letter-spacing: 1px;
+}
+
+.sectionHeader h2 {
+  font-size: 14px;
+  margin: 5px 0;
+}
+
+
+/* =========================
+   REPORT LIST
+========================= */
+
+.reportList {
+  background: white;
+  border: 1px solid #dedfdb;
+  border-radius: 8px;
+  overflow: hidden;
+}
+
+.reportRow {
+  width: 100%;
+  border: 0;
+  border-bottom: 1px solid #eee;
+  background: white;
+  display: grid;
+  grid-template-columns: 35px 2fr 1.2fr 110px 15px;
+  gap: 12px;
+  align-items: center;
+  padding: 13px;
+  text-align: left;
+}
+
+.reportRow:last-child {
+  border-bottom: 0;
+}
+
+.reportRow:hover {
+  background: #fafbfa;
+}
+
+.fileIcon {
+  width: 30px;
+  height: 30px;
+  border: 1px solid #ddd;
+  border-radius: 6px;
+  display: grid;
+  place-items: center;
+  color: #68716e;
+}
+
+.reportMain b {
+  display: block;
+  font-size: 9px;
+}
+
+.reportMain span {
+  display: block;
+  font-size: 7px;
+  color: #999;
+  margin-top: 4px;
+}
+
+.reportTech {
+  font-size: 7px;
+}
+
+.reportTech small {
+  display: block;
+  color: #aaa;
+  font-size: 6px;
+  margin-bottom: 4px;
+}
+
+.status {
+  font-size: 7px;
+  background: #edf0ed;
+  color: #657068;
+  padding: 5px 6px;
+  border-radius: 4px;
+  width: max-content;
+}
+
+.empty {
+  padding: 30px;
+  text-align: center;
+  color: #999;
+  font-size: 8px;
+}
+
+
+/* =========================
+   FILTER
+========================= */
+
+.filterBar {
+  display: flex;
+  gap: 8px;
+  margin-bottom: 12px;
+}
+
+.filterBar input,
+.filterBar select {
+  height: 36px;
+  border: 1px solid #ddd;
+  background: white;
+  border-radius: 6px;
+  padding: 0 10px;
+  font-size: 8px;
+}
+
+.filterBar input {
+  flex: 1;
+}
+
+
+/* =========================
+   REPORT DETAIL
+========================= */
+
+.reportHero {
+  background: white;
+  border: 1px solid #dedfdb;
+  border-radius: 9px;
+  padding: 20px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.reportHero small {
+  font-size: 7px;
+  color: #999;
+}
+
+.reportHero h1 {
+  font-size: 20px;
+  margin: 6px 0;
+}
+
+.reportHero p {
+  font-size: 8px;
+  color: #777;
+}
+
+.reportActions {
+  display: flex;
+  justify-content: flex-end;
+  gap: 7px;
+  margin: 10px 0;
+}
+
+.reportActions button {
+  border: 1px solid #ddd;
+  background: white;
+  border-radius: 6px;
+  padding: 8px 11px;
+  font-size: 8px;
+  display: flex;
+  align-items: center;
+  gap: 5px;
+}
+
+.reportColumns {
+  display: grid;
+  grid-template-columns: 1.7fr 1fr;
+  gap: 10px;
+}
+
+.infoBlock {
+  background: white;
+  border: 1px solid #dedfdb;
+  border-radius: 8px;
+  padding: 15px;
+  margin-bottom: 10px;
+}
+
+.infoBlock h2 {
+  font-size: 10px;
+  border-bottom: 1px solid #eee;
+  padding-bottom: 10px;
+  margin: 0;
+}
+
+.infoRow {
+  display: grid;
+  grid-template-columns: 1fr 1.3fr;
+  padding: 9px 0;
+  border-bottom: 1px solid #f0f1ef;
+}
+
+.infoRow:last-child {
+  border-bottom: 0;
+}
+
+.infoRow small {
+  font-size: 7px;
+  color: #999;
+}
+
+.infoRow b {
+  font-size: 8px;
+  font-weight: 500;
+}
+
+.workflowRow {
+  display: flex;
+  gap: 9px;
+  padding: 10px 0;
+  border-bottom: 1px solid #eee;
+}
+
+.workflowIcon {
+  width: 24px;
+  height: 24px;
+  border-radius: 50%;
+  background: #edf4ee;
+  color: #55735b;
+  display: grid;
+  place-items: center;
+}
+
+.workflowRow b,
+.workflowRow small {
+  display: block;
+}
+
+.workflowRow b {
+  font-size: 8px;
+}
+
+.workflowRow small {
+  font-size: 7px;
+  color: #999;
+  margin-top: 3px;
+}
+
+.photoPlaceholder {
+  height: 90px;
+  margin-top: 8px;
+  background: #e7e9e6;
+  border-radius: 5px;
+  display: grid;
+  place-items: center;
+  color: #888;
+  font-size: 7px;
+}
+
+
+/* =========================
+   ADMIN
+========================= */
+
+.adminList,
+.templateList,
+.accountCard {
+  background: white;
+  border: 1px solid #dedfdb;
+  border-radius: 8px;
+  overflow: hidden;
+}
+
+.adminRow,
+.templateRow {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 13px;
+  border-bottom: 1px solid #eee;
+}
+
+.adminRow:last-child,
+.templateRow:last-child {
+  border-bottom: 0;
+}
+
+.adminRow > div:nth-child(2),
+.templateRow > div:nth-child(2) {
+  flex: 1;
+}
+
+.adminRow b,
+.adminRow small,
+.templateRow b,
+.templateRow small {
+  display: block;
+}
+
+.adminRow b,
+.templateRow b {
+  font-size: 9px;
+}
+
+.adminRow small,
+.templateRow small {
+  font-size: 7px;
+  color: #999;
+  margin-top: 3px;
+}
+
+.adminRow span {
+  font-size: 7px;
+  background: #edf0ed;
+  padding: 5px 7px;
+  border-radius: 4px;
+}
+
+.adminRow button,
+.templateRow button {
+  border: 0;
+  background: transparent;
+  color: #607176;
+  font-size: 8px;
+}
+
+.templateRow button {
+  display: flex;
+  align-items: center;
+  gap: 3px;
+}
+
+
+/* =========================
+   ACCOUNT
+========================= */
+
+.accountCard {
+  padding: 25px;
+  max-width: 600px;
+}
+
+.bigAvatar {
+  width: 60px;
+  height: 60px;
+  border-radius: 50%;
+  background: #e5eaea;
+  display: grid;
+  place-items: center;
+  font-size: 22px;
+  font-weight: bold;
+}
+
+.accountCard h2 {
+  font-size: 16px;
+  margin: 13px 0 4px;
+}
+
+.accountCard > p {
+  font-size: 8px;
+  color: #999;
+  margin-bottom: 20px;
+}
+
+.accountInfo {
+  border-top: 1px solid #eee;
+}
+
+
+/* =========================
+   RESPONSIVE
+========================= */
+
+@media (max-width: 850px) {
+
+  .sidebar {
+    transform: translateX(-100%);
+    transition: 0.2s;
+  }
+
+  .sidebar.open {
+    transform: translateX(0);
+  }
+
+  .mobileClose {
+    display: block;
+    margin-left: auto;
+    border: 0;
+    background: transparent;
+  }
+
+  main {
+    margin-left: 0;
+  }
+
+  .mobileHeader {
+    display: flex;
+    height: 55px;
+    background: white;
+    border-bottom: 1px solid #ddd;
+    align-items: center;
+    padding: 0 15px;
+    gap: 12px;
+  }
+
+  .mobileHeader button {
+    border: 0;
+    background: transparent;
+  }
+
+  .mobileHeader b {
+    font-size: 11px;
+  }
+
+  .mobileHeader svg:last-child {
+    margin-left: auto;
+  }
+
+  .content {
+    padding: 22px 16px 50px;
+  }
+
+  .reportColumns {
+    grid-template-columns: 1fr;
+  }
+
+}
+
+
+@media (max-width: 600px) {
+
+  .welcome {
+    display: block;
+  }
+
+  .quickStats {
+    margin-top: 20px;
+    justify-content: space-between;
+  }
+
+  .reportTech {
+    display: none;
+  }
+
+  .reportRow {
+    grid-template-columns: 32px 1fr 90px 12px;
+  }
+
+  .topBar h1 {
+    font-size: 18px;
+  }
+
+  .filterBar {
+    display: block;
+  }
+
+  .filterBar input,
+  .filterBar select {
+    width: 100%;
+    margin-bottom: 7px;
+  }
+
+  .reportHero {
+    display: block;
+  }
+
+  .reportHero .status {
+    display: inline-block;
+    margin-top: 10px;
+  }
+
+  .reportActions {
+    justify-content: stretch;
+  }
+
+  .reportActions button {
+    flex: 1;
+    justify-content: center;
+  }
+
+}
+.modalOverlay,
+.modalBg {
+  position: fixed;
+  inset: 0;
+  background: rgba(20, 25, 26, 0.35);
+  display: grid;
+  place-items: center;
+  padding: 20px;
+  z-index: 100;
+}
+
+.modal {
+  width: 430px;
+  max-width: 100%;
+  background: white;
+  border-radius: 10px;
+  border: 1px solid #ddd;
+  padding: 25px;
+  position: relative;
+}
+
+
+/* =========================================================
+   CREATE ACCOUNT MODAL - FIX
+   main.jsx uses .modalBg
+========================================================= */
+
+.modalOverlay,
+.modalBg {
+  position: fixed;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(20, 25, 26, 0.35);
+  display: grid;
+  place-items: center;
+  padding: 20px;
+  z-index: 9999;
+}
+
+.modal {
+  width: 430px;
+  max-width: 100%;
+  max-height: calc(100vh - 40px);
+  overflow-y: auto;
+  background: #ffffff;
+  border-radius: 10px;
+  border: 1px solid #ddd;
+  padding: 25px;
+  position: relative;
+  box-sizing: border-box;
+  color: #202425;
+  box-shadow: 0 20px 60px rgba(0, 0, 0, 0.18);
+  z-index: 10000;
+}
+
+.modalClose {
+  position: absolute;
+  right: 15px;
+  top: 15px;
+  width: 30px;
+  height: 30px;
+  display: grid;
+  place-items: center;
+  border: 0;
+  background: transparent;
+  color: #555;
+  cursor: pointer;
+  z-index: 10001;
+}
+
+.modalClose:hover {
+  background: #f0f2f1;
+  border-radius: 6px;
+}
+
+.modal > small {
+  color: #999;
+  font-size: 7px;
+  letter-spacing: 1px;
+  display: block;
+  margin-bottom: 6px;
+}
+
+.modal h2 {
+  font-size: 18px;
+  margin: 7px 0;
+}
+
+.modal > p {
+  color: #888;
+  font-size: 8px;
+  margin: 0 0 20px;
+  line-height: 1.5;
+}
+
+.modal form {
+  display: flex;
+  flex-direction: column;
+  gap: 13px;
+}
+
+.modal .formField {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  margin: 0;
+  color: #555;
+  font-size: 8px;
+}
+
+.modal .formField span {
+  font-size: 8px;
+  color: #555;
+}
+
+.modal input,
+.modal select {
+  display: block;
+  width: 100%;
+  height: 38px;
+  margin: 0;
+  border: 1px solid #ddd;
+  border-radius: 6px;
+  padding: 0 10px;
+  font-size: 8px;
+  background: white;
+  color: #202425;
+  outline: none;
+  box-sizing: border-box;
+}
+
+.modal input:focus,
+.modal select:focus {
+  border-color: #64777b;
+  box-shadow: 0 0 0 3px rgba(100, 119, 123, 0.10);
+}
+
+.modalActions {
+  display: flex;
+  justify-content: flex-end;
+  gap: 7px;
+  margin-top: 7px;
+}
+
+.modalActions > button {
+  min-height: 38px;
+}
+
+.modalActions > button:first-child {
+  border: 1px solid #ddd;
+  background: white;
+  color: #555;
+  border-radius: 6px;
+  padding: 9px 12px;
+  font-size: 8px;
+}
+
+.modalActions > .darkButton {
+  border: 0;
+  background: #1f2c30;
+  color: white;
+  border-radius: 6px;
+  padding: 9px 12px;
+  font-size: 8px;
+}
+
+@media (max-width: 600px) {
+  .modalOverlay,
+  .modalBg {
+    padding: 14px;
+  }
+
+  .modal {
+    width: 100%;
+    padding: 22px;
+  }
+}
+
+
+.modalClose {
+  position: absolute;
+  right: 15px;
+  top: 15px;
+  border: 0;
+  background: transparent;
+}
+
+.modal > small {
+  color: #999;
+  font-size: 7px;
+  letter-spacing: 1px;
+}
+
+.modal h2 {
+  font-size: 18px;
+  margin: 7px 0;
+}
+
+.modal > p {
+  color: #888;
+  font-size: 8px;
+  margin-bottom: 20px;
+}
+
+.modal label {
+  display: block;
+  font-size: 8px;
+  color: #555;
+  margin-bottom: 13px;
+}
+
+.modal input,
+.modal select {
+  display: block;
+  width: 100%;
+  height: 38px;
+  margin-top: 5px;
+  border: 1px solid #ddd;
+  border-radius: 6px;
+  padding: 0 10px;
+  font-size: 8px;
+  background: white;
+}
+
+.modalActions {
+  display: flex;
+  justify-content: flex-end;
+  gap: 7px;
+  margin-top: 20px;
+}
+
+.modalActions > button:first-child {
+  border: 1px solid #ddd;
+  background: white;
+  border-radius: 6px;
+  padding: 9px 12px;
+  font-size: 8px;
+}
+/* =========================================================
+   REPORT FORM - CLEAN PROFESSIONAL UI
+   Paste this at the VERY BOTTOM of style.css
+========================================================= */
+
+
+/* =========================
+   REPORT FORM HEADER
+========================= */
+
+.reportFormHeader {
+  margin: 22px 0 12px;
+}
+
+.reportFormHeader small {
+  display: block;
+  color: #8b9290;
+  font-size: 9px;
+  font-weight: 700;
+  letter-spacing: 1.2px;
+}
+
+.reportFormHeader h2 {
+  margin: 5px 0 0;
+  font-size: 17px;
+  font-weight: 700;
+  color: #202425;
+}
+
+
+/* =========================
+   INFORMATION BLOCK
+========================= */
+
+.infoBlock {
+  background: #ffffff;
+  border: 1px solid #e1e4e2;
+  border-radius: 10px;
+  padding: 22px 24px;
+  margin-bottom: 14px;
+}
+
+
+/* TITLE */
+
+.infoBlock > h2 {
+  margin: 0 0 20px;
+
+  padding-bottom: 13px;
+
+  border-bottom: 1px solid #eceeed;
+
+  font-size: 13px;
+  font-weight: 700;
+
+  color: #202425;
+}
+
+
+/* =========================
+   EDITABLE FORM GRID
+========================= */
+
+.infoBlock:has(.editableField) {
+  display: grid;
+
+  grid-template-columns:
+    repeat(2, minmax(0, 1fr));
+
+  column-gap: 24px;
+  row-gap: 18px;
+}
+
+
+/* Section title takes full width */
+
+.infoBlock:has(.editableField) > h2 {
+  grid-column: 1 / -1;
+}
+
+
+/* =========================
+   FIELD
+========================= */
+
+.editableField {
+  width: 100%;
+  padding: 0;
+  margin: 0;
+  border: 0;
+}
+
+
+/* Label above input */
+
+.editableField label {
+  display: flex;
+  flex-direction: column;
+
+  gap: 7px;
+
+  width: 100%;
+
+  color: #555d5b;
+
+  font-size: 10px;
+  font-weight: 600;
+}
+
+
+/* =========================
+   INPUT
+========================= */
+
+.editableField input,
+.editableField select {
+  width: 100%;
+  height: 42px;
+
+  box-sizing: border-box;
+
+  padding: 0 12px;
+
+  background: #fafbfa;
+
+  border: 1px solid #d7dbd9;
+  border-radius: 7px;
+
+  color: #252a29;
+
+  font-family: Arial, sans-serif;
+  font-size: 12px;
+
+  outline: none;
+
+  transition:
+    border-color 0.15s ease,
+    background 0.15s ease,
+    box-shadow 0.15s ease;
+}
+
+
+/* Hover */
+
+.editableField input:hover,
+.editableField select:hover {
+  background: #ffffff;
+  border-color: #b8bfbd;
+}
+
+
+/* Focus */
+
+.editableField input:focus,
+.editableField select:focus {
+  background: #ffffff;
+
+  border-color: #647b80;
+
+  box-shadow:
+    0 0 0 3px rgba(100, 123, 128, 0.10);
+}
+
+
+/* Placeholder */
+
+.editableField input::placeholder {
+  color: #a6acab;
+}
+
+
+/* =========================
+   SELECT
+========================= */
+
+.editableField select {
+  cursor: pointer;
+
+  appearance: auto;
+}
+
+
+/* =========================
+   JOB INFORMATION
+========================= */
+
+.infoBlock:not(:has(.editableField)) .infoRow {
+  display: grid;
+
+  grid-template-columns:
+    180px 1fr;
+
+  align-items: center;
+
+  min-height: 42px;
+
+  padding: 9px 0;
+
+  border-bottom: 1px solid #f0f1ef;
+}
+
+.infoBlock:not(:has(.editableField)) .infoRow:last-child {
+  border-bottom: 0;
+}
+
+.infoBlock:not(:has(.editableField)) .infoRow small {
+  font-size: 10px;
+  color: #8b9290;
+}
+
+.infoBlock:not(:has(.editableField)) .infoRow b {
+  font-size: 11px;
+  font-weight: 600;
+  color: #252a29;
+}
+
+
+/* =========================
+   NOTES
+========================= */
+
+.reportTextarea {
+  width: 100%;
+  min-height: 130px;
+
+  box-sizing: border-box;
+
+  padding: 13px;
+
+  resize: vertical;
+
+  background: #fafbfa;
+
+  border: 1px solid #d7dbd9;
+  border-radius: 7px;
+
+  color: #252a29;
+
+  font-family: Arial, sans-serif;
+  font-size: 12px;
+
+  outline: none;
+}
+
+.reportTextarea:focus {
+  background: #ffffff;
+
+  border-color: #647b80;
+
+  box-shadow:
+    0 0 0 3px rgba(100, 123, 128, 0.10);
+}
+
+
+/* =========================
+   FORM ACTIONS
+========================= */
+
+.reportFormActions {
+  display: flex;
+
+  justify-content: flex-end;
+
+  align-items: center;
+
+  gap: 9px;
+
+  margin-top: 8px;
+}
+
+.savedText {
+  margin-right: auto;
+
+  color: #64806b;
+
+  font-size: 9px;
+}
+
+.saveButton {
+  height: 38px;
+
+  display: flex;
+  align-items: center;
+  gap: 7px;
+
+  padding: 0 14px;
+
+  background: #ffffff;
+
+  border: 1px solid #d6dad8;
+
+  border-radius: 7px;
+
+  color: #4f5957;
+
+  font-size: 10px;
+}
+
+.saveButton:hover {
+  background: #f6f7f6;
+}
+
+
+/* =========================
+   SUBMIT BUTTON
+========================= */
+
+.reportFormActions .darkButton {
+  height: 38px;
+
+  padding: 0 16px;
+
+  border-radius: 7px;
+
+  font-size: 10px;
+}
+
+
+/* =========================
+   REPORT ACTION BUTTONS
+========================= */
+
+.reportFormActions {
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  gap: 10px;
+  margin-top: 18px;
+}
+
+.reportFormActions .saveButton,
+.reportFormActions .pdfButton,
+.reportFormActions .darkButton {
+  height: 40px !important;
+  min-height: 40px !important;
+  box-sizing: border-box !important;
+
+  display: inline-flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  gap: 8px !important;
+
+  padding: 0 16px !important;
+
+  border-radius: 8px !important;
+
+  font-family: Arial, Helvetica, sans-serif !important;
+  font-size: 10px !important;
+  font-weight: 600 !important;
+
+  cursor: pointer !important;
+
+  transition:
+    background .15s ease,
+    border-color .15s ease,
+    transform .15s ease,
+    box-shadow .15s ease !important;
+}
+
+.reportFormActions .saveButton,
+.reportFormActions .pdfButton {
+  background: #ffffff !important;
+  border: 1px solid #d5ddda !important;
+  color: #44524f !important;
+}
+
+.reportFormActions .saveButton:hover,
+.reportFormActions .pdfButton:hover {
+  background: #f3f6f5 !important;
+  border-color: #c3ceca !important;
+  transform: translateY(-1px);
+}
+
+.reportFormActions .darkButton {
+  background: #1f2d32 !important;
+  border: 1px solid #1f2d32 !important;
+  color: #ffffff !important;
+  box-shadow: 0 2px 5px rgba(31,45,50,.08) !important;
+}
+
+.reportFormActions .darkButton:hover {
+  background: #2b3c42 !important;
+  border-color: #2b3c42 !important;
+  transform: translateY(-1px);
+  box-shadow: 0 5px 12px rgba(31,45,50,.12) !important;
+}
+
+.reportFormActions button:active {
+  transform: translateY(0) !important;
+}
+
+/* =========================
+   PDF PREVIEW
+========================= */
+
+.pdfPreviewOverlay {
+  position: fixed;
+  inset: 0;
+  z-index: 6000;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  padding: 24px;
+
+  background: rgba(20, 29, 32, .45);
+  backdrop-filter: blur(2px);
+}
+
+.pdfPreviewModal {
+  width: min(1050px, 100%);
+  height: min(90vh, 900px);
+
+  display: flex;
+  flex-direction: column;
+
+  overflow: hidden;
+
+  background: #ffffff;
+  border: 1px solid #dfe4e2;
+  border-radius: 12px;
+
+  box-shadow: 0 24px 70px rgba(20, 29, 32, .20);
+}
+
+.pdfPreviewHeader {
+  min-height: 62px;
+  box-sizing: border-box;
+
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+
+  padding: 10px 16px;
+
+  border-bottom: 1px solid #e5e9e7;
+  background: #ffffff;
+}
+
+.pdfPreviewHeader small {
+  display: block;
+  margin-bottom: 3px;
+
+  color: #8a9491;
+  font-size: 7px;
+  font-weight: 700;
+  letter-spacing: 1px;
+}
+
+.pdfPreviewHeader h2 {
+  margin: 0;
+
+  color: #202a2d;
+  font-size: 14px;
+  line-height: 1.2;
+}
+
+.pdfPreviewClose {
+  width: 34px;
+  height: 34px;
+  flex: 0 0 34px;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  padding: 0;
+
+  background: #ffffff;
+  border: 1px solid #d8dfdc;
+  border-radius: 7px;
+
+  color: #53615e;
+  font-size: 21px;
+  line-height: 1;
+
+  cursor: pointer;
+}
+
+.pdfPreviewClose:hover {
+  background: #f2f5f4;
+}
+
+.pdfPreviewFrame {
+  width: 100%;
+  flex: 1;
+
+  display: block;
+
+  border: 0;
+  background: #eef1f0;
+}
+
+@media (max-width: 700px) {
+  .reportFormActions {
+    width: 100%;
+    flex-direction: column;
+    align-items: stretch;
+  }
+
+  .reportFormActions .saveButton,
+  .reportFormActions .pdfButton,
+  .reportFormActions .darkButton {
+    width: 100% !important;
+  }
+
+  .pdfPreviewOverlay {
+    padding: 10px;
+  }
+
+  .pdfPreviewModal {
+    height: calc(100vh - 20px);
+    border-radius: 9px;
+  }
+}
+
+/* =========================
+   CLIENT SIGNATURE BOX
+========================= */
+
+.clientSignBox {
+  display: flex;
+
+  align-items: center;
+
+  gap: 14px;
+
+  padding: 20px;
+
+  background: #ffffff;
+
+  border: 1px solid #e1e4e2;
+
+  border-radius: 10px;
+}
+
+.clientSignBox > div:first-child {
+  width: 42px;
+  height: 42px;
+
+  display: grid;
+  place-items: center;
+
+  background: #eef2f1;
+
+  border-radius: 8px;
+
+  color: #60777b;
+}
+
+.clientSignBox h3 {
+  margin: 0;
+
+  font-size: 12px;
+}
+
+.clientSignBox p {
+  margin: 4px 0 0;
+
+  color: #8b9290;
+
+  font-size: 9px;
+}
+
+.clientSignBox .darkButton {
+  margin-left: auto;
+}
+
+
+/* =========================================================
+   MOBILE
+========================================================= */
+
+@media (max-width: 700px) {
+
+  .infoBlock {
+    padding: 18px;
+  }
+
+  .infoBlock:has(.editableField) {
+    grid-template-columns: 1fr;
+
+    column-gap: 0;
+    row-gap: 15px;
+  }
+
+  .infoBlock:not(:has(.editableField)) .infoRow {
+    grid-template-columns: 1fr;
+
+    gap: 5px;
+  }
+
+  .reportFormActions {
+    flex-wrap: wrap;
+  }
+
+  .savedText {
+    width: 100%;
+    margin-bottom: 3px;
+  }
+
+  .saveButton,
+  .reportFormActions .darkButton {
+    flex: 1;
+    justify-content: center;
+  }
+
+  .clientSignBox {
+    display: block;
+  }
+
+  .clientSignBox .darkButton {
+    width: 100%;
+    margin-top: 15px;
+    justify-content: center;
+  }
+
+}
+.signaturePad {
+  width: 100%;
+  margin-top: 20px;
+  border: 1px solid #e2e2e2;
+  border-radius: 10px;
+  background: #fff;
+  overflow: hidden;
+}
+
+.signaturePadHeader {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 14px 16px;
+  border-bottom: 1px solid #ededed;
+}
+
+.signaturePadHeader div {
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
+}
+
+.signaturePadHeader small {
+  font-size: 9px;
+  letter-spacing: .08em;
+  color: #999;
+}
+
+.signaturePadHeader b {
+  font-size: 12px;
+  color: #222;
+}
+
+.signaturePadHeader button {
+  border: 0;
+  background: transparent;
+  color: #777;
+  font-size: 11px;
+  cursor: pointer;
+}
+
+.signatureCanvasWrap {
+  position: relative;
+  width: 100%;
+  height: 220px;
+  background: #fff;
+}
+
+.signatureCanvasWrap canvas {
+  display: block;
+  width: 100%;
+  height: 100%;
+  cursor: crosshair;
+  touch-action: none;
+}
+
+.signatureLine {
+  position: absolute;
+  left: 5%;
+  right: 5%;
+  bottom: 45px;
+  border-bottom: 1px solid #d8d8d8;
+  pointer-events: none;
+}
+
+.signatureHint {
+  display: block;
+  padding: 10px 16px 13px;
+  color: #999;
+  font-size: 10px;
+}
+.addTechnicianButton {
+  position: relative;
+  z-index: 20;
+  pointer-events: auto;
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+}
+
+
+/* =========================================================
+   VENDOR / ADMIN MANAGEMENT
+========================================================= */
+
+.adminPageToolbar {
+  width: 100%;
+  display: flex;
+  align-items: center;
+  margin-bottom: 18px;
+}
+
+.adminSearch {
+  width: min(420px, 100%);
+  height: 40px;
+  display: flex;
+  align-items: center;
+  gap: 9px;
+  padding: 0 12px;
+  box-sizing: border-box;
+  background: #fff;
+  border: 1px solid #dfe3e1;
+  border-radius: 8px;
+  color: #899390;
+}
+
+.adminSearch input {
+  width: 100%;
+  border: 0;
+  outline: 0;
+  background: transparent;
+  color: #273236;
+  font-family: inherit;
+  font-size: 10px;
+}
+
+.adminSearch input::placeholder {
+  color: #9aa3a0;
+}
+
+.rowActions {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  margin-left: auto;
+}
+
+.rowActions button {
+  width: 32px;
+  height: 32px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0;
+  border: 1px solid #dfe3e1;
+  border-radius: 6px;
+  background: #fff;
+  color: #64706d;
+  cursor: pointer;
+}
+
+.rowActions button:hover {
+  background: #f4f6f5;
+  border-color: #cbd3d0;
+}
+
+.vendorIcon {
+  width: 38px;
+  height: 38px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex: 0 0 38px;
+  background: #eef2f1;
+  border-radius: 9px;
+  color: #4e605c;
+}
+
+.userRow {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.userMain {
+  min-width: 0;
+  flex: 1;
+}
+
+.userMain b {
+  display: block;
+  overflow: hidden;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+}
+
+.userMain span {
+  display: block;
+  margin-top: 3px;
+  color: #889390;
+  font-size: 9px;
+}
+
+
+/* =========================================================
+   REPORT LIST
+========================================================= */
+
+.reportSection {
+  width: 100%;
+}
+
+.reportToolbar {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-bottom: 8px;
+}
+
+.reportSearch {
+  flex: 1;
+  min-width: 0;
+  height: 40px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 0 12px;
+  background: #fff;
+  border: 1px solid #dfe3e1;
+  border-radius: 8px;
+  color: #899390;
+}
+
+.reportSearch input {
+  width: 100%;
+  border: 0;
+  outline: 0;
+  background: transparent;
+  color: #273236;
+  font-family: inherit;
+  font-size: 10px;
+}
+
+.reportFilter {
+  width: 170px;
+  height: 40px;
+  flex-shrink: 0;
+  padding: 0 10px;
+  border: 1px solid #dfe3e1;
+  border-radius: 8px;
+  background: #fff;
+  color: #4f5c59;
+  font-family: inherit;
+  font-size: 10px;
+  outline: none;
+}
+
+.reportResultInfo {
+  display: flex;
+  justify-content: flex-end;
+  margin-bottom: 8px;
+  color: #8a9491;
+  font-size: 8px;
+}
+
+
+/* =========================================================
+   REPORT / ADMIN ACTIONS
+========================================================= */
+
+.adminEditGrid,
+.adminDataGrid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 14px 18px;
+}
+
+.adminReportActions {
+  display: flex;
+  justify-content: flex-end;
+  align-items: center;
+  gap: 9px;
+  flex-wrap: wrap;
+  margin-top: 18px;
+}
+
+.deleteReportButton,
+.templateDeleteButton {
+  min-height: 38px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  padding: 0 13px;
+  border: 1px solid #e1c9c9;
+  border-radius: 7px;
+  background: #fff;
+  color: #9b5555;
+  font-family: inherit;
+  font-size: 9px;
+  font-weight: 600;
+  cursor: pointer;
+}
+
+.deleteReportButton:hover,
+.templateDeleteButton:hover {
+  background: #fbf3f3;
+  border-color: #d9adad;
+}
+
+.signatureResetButton {
+  margin-top: 7px;
+  padding: 5px 8px;
+  border: 1px solid #dfe3e1;
+  border-radius: 5px;
+  background: #fff;
+  color: #7b5757;
+  font-family: inherit;
+  font-size: 7px;
+  cursor: pointer;
+}
+
+
+/* =========================================================
+   TEMPLATES
+========================================================= */
+
+.templateGrid {
+  width: 100%;
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 14px;
+}
+
+.templateCard {
+  min-width: 0;
+  padding: 20px;
+  background: #fff;
+  border: 1px solid #dfe4e2;
+  border-radius: 10px;
+}
+
+.templateIcon {
+  width: 36px;
+  height: 36px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-bottom: 14px;
+  background: #eef2f1;
+  border-radius: 8px;
+  color: #51615e;
+}
+
+.templateCard > small {
+  color: #7f8987;
+  font-size: 8px;
+  text-transform: uppercase;
+  letter-spacing: .8px;
+}
+
+.templateCard h3 {
+  margin: 5px 0 9px;
+  color: #202a2d;
+  font-size: 16px;
+  overflow: hidden;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+}
+
+.templateCard > span {
+  display: block;
+  color: #7e8986;
+  font-size: 9px;
+  margin-bottom: 16px;
+}
+
+.templateActions {
+  display: flex;
+  align-items: center;
+  gap: 7px;
+  flex-wrap: wrap;
+}
+
+.templateOpenButton,
+.templateButton,
+.templateEditButton,
+.templateDeleteButton {
+  min-height: 34px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  padding: 0 11px;
+  border-radius: 7px;
+  font-family: inherit;
+  font-size: 8px;
+  font-weight: 600;
+  cursor: pointer;
+}
+
+.templateOpenButton {
+  background: #1f3035;
+  border: 1px solid #1f3035;
+  color: #fff;
+}
+
+.templateOpenButton:hover {
+  background: #16262b;
+}
+
+.templateButton,
+.templateEditButton {
+  background: #fff;
+  border: 1px solid #cfd6d3;
+  color: #37433f;
+}
+
+.templateButton:hover,
+.templateEditButton:hover {
+  background: #f3f5f4;
+}
+
+
+/* =========================================================
+   TEMPLATE VIEW MODAL
+========================================================= */
+
+.templateViewModal {
+  width: min(560px, calc(100vw - 32px));
+  max-height: calc(100vh - 40px);
+  overflow-y: auto;
+}
+
+.templateViewModal h2 {
+  margin: 8px 0 6px;
+  color: #202a2d;
+  font-size: 21px;
+}
+
+.templateViewDescription {
+  margin: 0 0 20px;
+  color: #7d8986;
+  font-size: 10px;
+}
+
+.templateFieldHeader {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding-bottom: 12px;
+  border-bottom: 1px solid #eceeed;
+}
+
+.templateFieldHeader b {
+  font-size: 10px;
+}
+
+.templateFieldHeader span {
+  color: #8b9692;
+  font-size: 8px;
+}
+
+.templateFieldList {
+  margin-top: 14px;
+}
+
+.templateFieldItem {
+  min-height: 42px;
+  display: flex;
+  align-items: center;
+  gap: 9px;
+  padding: 0 12px;
+  background: #f7f9f8;
+  border: 1px solid #e6eae8;
+  border-radius: 7px;
+  color: #43504d;
+  font-size: 9px;
+}
+
+.templateCheck {
+  width: 20px;
+  height: 20px;
+  flex-shrink: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 50%;
+  background: #e8efec;
+  color: #49625a;
+  font-size: 10px;
+}
+
+
+/* =========================================================
+   ACCOUNT
+========================================================= */
+
+.accountHero {
+  width: 100%;
+  display: flex;
+  align-items: center;
+  gap: 15px;
+  padding: 20px 22px;
+  margin-bottom: 16px;
+  background: #fff;
+  border: 1px solid #dfe3e1;
+  border-radius: 10px;
+  box-sizing: border-box;
+}
+
+.accountAvatar {
+  width: 52px;
+  height: 52px;
+  flex: 0 0 52px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: #e9efed;
+  color: #30403e;
+  border-radius: 50%;
+  font-size: 15px;
+  font-weight: 700;
+}
+
+.accountHero > div:nth-child(2) {
+  min-width: 0;
+  flex: 1;
+}
+
+.accountHero small {
+  display: block;
+  margin-bottom: 4px;
+  color: #8a9491;
+  font-size: 8px;
+  letter-spacing: .9px;
+}
+
+.accountHero h2 {
+  margin: 0;
+  color: #202a2d;
+  font-size: 16px;
+}
+
+.accountHero p {
+  margin: 4px 0 0;
+  color: #7d8986;
+  font-size: 9px;
+}
+
+.accountForm {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 18px 20px;
+}
+
+.accountForm .formField:last-of-type,
+.accountForm .modalActions {
+  grid-column: 1 / -1;
+}
+
+
+/* =========================================================
+   CREATE REPORT
+========================================================= */
+
+.createReportPage {
+  width: calc(100% - 80px);
+  max-width: 980px;
+  margin: 0 auto;
+  padding: 38px 0 70px;
+  box-sizing: border-box;
+}
+
+.createReportHeader {
+  margin-bottom: 30px;
+}
+
+.createReportHeader .backButton {
+  margin-bottom: 22px;
+}
+
+.createReportHeader > small {
+  display: block;
+  margin-bottom: 7px;
+  color: #7d8986;
+  font-size: 9px;
+  letter-spacing: 1px;
+}
+
+.createReportHeader h1 {
+  margin: 0;
+  color: #1f2d31;
+  font-size: 30px;
+  line-height: 1.15;
+  font-weight: 700;
+}
+
+.createReportHeader p {
+  margin: 9px 0 0;
+  color: #7d8784;
+  font-size: 11px;
+  line-height: 1.5;
+}
+
+.createReportForm {
+  width: 100%;
+}
+
+.createReportCard {
+  width: 100%;
+  padding: 28px 30px;
+  box-sizing: border-box;
+  background: #fff;
+  border: 1px solid #dfe4e2;
+  border-radius: 12px;
+  box-shadow: 0 2px 8px rgba(31, 45, 49, .03);
+}
+
+.createReportSectionHeader {
+  padding-bottom: 18px;
+  margin-bottom: 24px;
+  border-bottom: 1px solid #ecefed;
+}
+
+.createReportSectionHeader small {
+  display: block;
+  margin-bottom: 6px;
+  color: #8a9491;
+  font-size: 8px;
+  letter-spacing: 1px;
+}
+
+.createReportSectionHeader h2 {
+  margin: 0;
+  color: #202c30;
+  font-size: 19px;
+  line-height: 1.2;
+}
+
+.createReportSectionHeader p {
+  margin: 8px 0 0;
+  color: #7d8986;
+  font-size: 10px;
+  line-height: 1.5;
+}
+
+.createReportGrid {
+  width: 100%;
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  column-gap: 24px;
+  row-gap: 20px;
+}
+
+.createField {
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 7px;
+}
+
+.createField.full {
+  grid-column: 1 / -1;
+}
+
+.createField > span {
+  display: block;
+  color: #56635f;
+  font-size: 10px;
+  font-weight: 600;
+}
+
+.createField input,
+.createField select {
+  width: 100%;
+  height: 42px;
+  box-sizing: border-box;
+  padding: 0 12px;
+  border: 1px solid #cfd6d3;
+  border-radius: 7px;
+  background: #fff;
+  color: #273236;
+  font-family: inherit;
+  font-size: 11px;
+  outline: none;
+}
+
+.createField input:focus,
+.createField select:focus {
+  border-color: #5f716c;
+  box-shadow: 0 0 0 3px rgba(95, 113, 108, .10);
+}
+
+.createReportFooter {
+  width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  gap: 10px;
+  margin-top: 18px;
+}
+
+.createCancelButton,
+.createSubmitButton {
+  height: 40px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 7px;
+  padding: 0 18px;
+  border-radius: 7px;
+  font-family: inherit;
+  font-size: 10px;
+  font-weight: 600;
+  cursor: pointer;
+}
+
+.createCancelButton {
+  background: #fff;
+  border: 1px solid #d1d7d5;
+  color: #596662;
+}
+
+.createSubmitButton {
+  background: #1f3035;
+  border: 1px solid #1f3035;
+  color: #fff;
+}
+
+
+/* =========================================================
+   RESPONSIVE
+========================================================= */
+
+@media (max-width: 900px) {
+  .templateGrid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+
+@media (max-width: 760px) {
+  .reportToolbar {
+    flex-direction: column;
+    align-items: stretch;
+  }
+
+  .reportFilter {
+    width: 100%;
+  }
+
+  .adminEditGrid,
+  .adminDataGrid {
+    grid-template-columns: 1fr;
+  }
+
+  .adminReportActions {
+    align-items: stretch;
+    flex-direction: column;
+  }
+
+  .adminReportActions button {
+    width: 100%;
+  }
+}
+
+@media (max-width: 700px) {
+  .templateGrid {
+    grid-template-columns: 1fr;
+  }
+
+  .accountHero {
+    align-items: flex-start;
+    flex-wrap: wrap;
+  }
+
+  .accountHero > button {
+    width: 100%;
+  }
+
+  .accountForm {
+    grid-template-columns: 1fr;
+  }
+
+  .accountForm .formField:last-of-type,
+  .accountForm .modalActions {
+    grid-column: auto;
+  }
+
+  .topActions {
+    width: 100%;
+    flex-wrap: wrap;
+  }
+
+  .topActions > button {
+    flex: 1;
+  }
+
+  .createReportPage {
+    width: calc(100% - 32px);
+    padding: 24px 0 45px;
+  }
+
+  .createReportCard {
+    padding: 20px;
+  }
+
+  .createReportGrid {
+    grid-template-columns: 1fr;
+  }
+
+  .createField.full {
+    grid-column: auto;
+  }
+
+  .createReportFooter {
+    flex-direction: column-reverse;
+    align-items: stretch;
+  }
+
+  .createCancelButton,
+  .createSubmitButton {
+    width: 100%;
+  }
+
+  .templateActions {
+    align-items: stretch;
+  }
+
+  .templateOpenButton,
+  .templateButton,
+  .templateEditButton,
+  .templateDeleteButton {
+    flex: 1;
+  }
+}
+
+/* =========================================================
+   ADMIN REPORT ACTIONS - CLEAN BUTTONS
+   Override for Edit / Download / Delete
+========================================================= */
+
+.adminReportActions {
+  width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  gap: 10px;
+  flex-wrap: wrap;
+  margin-top: 20px;
+}
+
+/* Semua tombol punya ukuran dan tipografi yang konsisten */
+.adminReportActions > button {
+  height: 40px;
+  min-height: 40px;
+  box-sizing: border-box;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 7px;
+  padding: 0 15px;
+  border-radius: 8px;
+  font-family: inherit;
+  font-size: 10px;
+  font-weight: 600;
+  line-height: 1;
+  cursor: pointer;
+  transition:
+    background 0.15s ease,
+    border-color 0.15s ease,
+    color 0.15s ease,
+    transform 0.15s ease;
+}
+
+/* EDIT */
+.adminReportActions .saveButton {
+  height: 40px;
+  min-height: 40px;
+  padding: 0 15px;
+  background: #ffffff;
+  border: 1px solid #cfd6d3;
+  color: #33413e;
+}
+
+.adminReportActions .saveButton:hover {
+  background: #f5f7f6;
+  border-color: #aeb9b5;
+}
+
+/* DOWNLOAD PDF */
+.adminReportActions .pdfButton {
+  height: 40px;
+  min-height: 40px;
+  padding: 0 16px;
+  background: #1f3035;
+  border: 1px solid #1f3035;
+  color: #ffffff;
+}
+
+.adminReportActions .pdfButton:hover {
+  background: #16262b;
+  border-color: #16262b;
+}
+
+/* DELETE */
+.adminReportActions .deleteReportButton {
+  height: 40px;
+  min-height: 40px;
+  padding: 0 15px;
+  background: #ffffff;
+  border: 1px solid #e1c9c9;
+  color: #a05252;
+}
+
+.adminReportActions .deleteReportButton:hover {
+  background: #fbf3f3;
+  border-color: #d5a9a9;
+  color: #8e4141;
+}
+
+/* Icon jangan berubah ukuran / ikut style browser */
+.adminReportActions > button svg {
+  flex-shrink: 0;
+  width: 15px;
+  height: 15px;
+}
+
+/* Mobile */
+@media (max-width: 760px) {
+  .adminReportActions {
+    align-items: stretch;
+    flex-direction: column;
+  }
+
+  .adminReportActions > button {
+    width: 100%;
+  }
+}
