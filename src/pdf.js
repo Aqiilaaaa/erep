@@ -2,8 +2,11 @@ import jsPDF from "jspdf";
 import QRCode from "qrcode";
 
 /**
- * PDF report renderer
- * Mengikuti struktur form PM / CM yang ada di web.
+ * PDF report renderer.
+ *
+ * The web form is the source of truth. The PDF intentionally follows the
+ * structure of the PM / CM paper forms while keeping the application's own
+ * company and report data.
  */
 export async function generateReportPDF(report = {}) {
   const pdf = new jsPDF("p", "mm", "a4");
@@ -41,33 +44,47 @@ export async function generateReportPDF(report = {}) {
     form.reportTime ||
     "-";
 
-  const clean = (value) => {
+  const clean = (v) => {
     if (
-      value === undefined ||
-      value === null ||
-      value === ""
+      v === undefined ||
+      v === null ||
+      v === ""
     ) {
       return "-";
     }
 
-    return String(value);
+    return String(v);
   };
 
-  const has = (value) =>
-    value !== undefined &&
-    value !== null &&
-    value !== "";
+  const has = (v) =>
+    !(
+      v === undefined ||
+      v === null ||
+      v === ""
+    );
 
-  const lines = (value, width) =>
-    pdf.splitTextToSize(clean(value), width);
+  const safeLines = (v, width) =>
+    pdf.splitTextToSize(
+      clean(v),
+      width
+    );
 
   const font = (
     size = 7,
     style = "normal"
   ) => {
-    pdf.setFont("helvetica", style);
+    pdf.setFont(
+      "helvetica",
+      style
+    );
+
     pdf.setFontSize(size);
-    pdf.setTextColor(35, 45, 58);
+
+    pdf.setTextColor(
+      35,
+      45,
+      58
+    );
   };
 
   const line = (
@@ -76,9 +93,20 @@ export async function generateReportPDF(report = {}) {
     x2 = W - M,
     weight = 0.25
   ) => {
-    pdf.setDrawColor(125, 135, 145);
+    pdf.setDrawColor(
+      125,
+      135,
+      145
+    );
+
     pdf.setLineWidth(weight);
-    pdf.line(x1, y, x2, y);
+
+    pdf.line(
+      x1,
+      y,
+      x2,
+      y
+    );
   };
 
   const rect = (
@@ -88,7 +116,12 @@ export async function generateReportPDF(report = {}) {
     h,
     fill = false
   ) => {
-    pdf.setDrawColor(130, 140, 150);
+    pdf.setDrawColor(
+      130,
+      140,
+      150
+    );
+
     pdf.setLineWidth(0.25);
 
     pdf.rect(
@@ -100,12 +133,22 @@ export async function generateReportPDF(report = {}) {
     );
   };
 
-  /*
-   * Header section
-   */
-  const section = (title, y) => {
-    pdf.setFillColor(238, 241, 244);
-    pdf.setDrawColor(125, 135, 145);
+  const section = (
+    title,
+    y
+  ) => {
+    pdf.setFillColor(
+      231,
+      237,
+      244
+    );
+
+    pdf.setDrawColor(
+      125,
+      135,
+      145
+    );
+
     pdf.setLineWidth(0.25);
 
     pdf.rect(
@@ -116,7 +159,10 @@ export async function generateReportPDF(report = {}) {
       "FD"
     );
 
-    font(7.5, "bold");
+    font(
+      7.5,
+      "bold"
+    );
 
     pdf.text(
       title,
@@ -127,9 +173,6 @@ export async function generateReportPDF(report = {}) {
     return y + 7;
   };
 
-  /*
-   * Simple table
-   */
   const table = (
     columns,
     rows,
@@ -149,20 +192,16 @@ export async function generateReportPDF(report = {}) {
 
     const totalW =
       widths.reduce(
-        (sum, width) =>
-          sum + width,
+        (a, b) => a + b,
         0
       );
 
-    let currentY = y;
+    let cy = y;
 
-    /*
-     * Header
-     */
     pdf.setFillColor(
-      238,
-      241,
-      244
+      232,
+      237,
+      242
     );
 
     pdf.setDrawColor(
@@ -175,22 +214,22 @@ export async function generateReportPDF(report = {}) {
 
     pdf.rect(
       x,
-      currentY,
+      cy,
       totalW,
       headerH,
       "FD"
     );
 
-    let currentX = x;
+    let cx = x;
 
     columns.forEach(
-      (column, index) => {
-        if (index > 0) {
+      (col, i) => {
+        if (i > 0) {
           pdf.line(
-            currentX,
-            currentY,
-            currentX,
-            currentY + headerH
+            cx,
+            cy,
+            cx,
+            cy + headerH
           );
         }
 
@@ -199,101 +238,95 @@ export async function generateReportPDF(report = {}) {
           "bold"
         );
 
-        const headerLines =
+        const lines =
           pdf.splitTextToSize(
-            clean(column),
-            widths[index] - 2.2
+            col,
+            widths[i] - 2.2
           );
 
         pdf.text(
-          headerLines,
-          currentX + 1.1,
-          currentY + 3.2
+          lines,
+          cx + 1.1,
+          cy + 3.2
         );
 
-        currentX +=
-          widths[index];
+        cx += widths[i];
       }
     );
 
-    currentY += headerH;
+    cy += headerH;
 
-    /*
-     * Rows
-     */
-    rows.forEach((row) => {
-      const prepared =
-        row.map(
-          (cell, index) =>
-            pdf.splitTextToSize(
-              clean(cell),
-              widths[index] - 2.2
-            )
+    rows.forEach(
+      (row) => {
+        const prepared =
+          row.map(
+            (cell, i) =>
+              pdf.splitTextToSize(
+                clean(cell),
+                widths[i] - 2.2
+              )
+          );
+
+        const maxLines =
+          Math.max(
+            ...prepared.map(
+              (v) => v.length
+            ),
+            1
+          );
+
+        const h =
+          Math.max(
+            rowH,
+            maxLines * 3.1 + 2.8
+          );
+
+        pdf.rect(
+          x,
+          cy,
+          totalW,
+          h,
+          "S"
         );
 
-      const maxLines =
-        Math.max(
-          ...prepared.map(
-            (item) =>
-              item.length
-          ),
-          1
-        );
+        cx = x;
 
-      const height =
-        Math.max(
-          rowH,
-          maxLines * 3.1 + 2.8
-        );
+        row.forEach(
+          (_, i) => {
+            if (i > 0) {
+              pdf.line(
+                cx,
+                cy,
+                cx,
+                cy + h
+              );
+            }
 
-      pdf.rect(
-        x,
-        currentY,
-        totalW,
-        height
-      );
-
-      currentX = x;
-
-      row.forEach(
-        (_, index) => {
-          if (index > 0) {
-            pdf.line(
-              currentX,
-              currentY,
-              currentX,
-              currentY + height
-            );
-          }
-
-          font(
-            fontSize,
-            index === 0 &&
+            font(
+              fontSize,
+              i === 0 &&
               options.firstColBold
-              ? "bold"
-              : "normal"
-          );
+                ? "bold"
+                : "normal"
+            );
 
-          pdf.text(
-            prepared[index],
-            currentX + 1.1,
-            currentY + 4
-          );
+            pdf.text(
+              prepared[i],
+              cx + 1.1,
+              cy + 4
+            );
 
-          currentX +=
-            widths[index];
-        }
-      );
+            cx += widths[i];
+          }
+        );
 
-      currentY += height;
-    });
+        cy += h;
+      }
+    );
 
-    return currentY;
+    return cy;
   };
 
-  /*
-   * Field cards / information boxes
-   */
   const fieldTable = (
     pairs,
     y,
@@ -321,7 +354,9 @@ export async function generateReportPDF(report = {}) {
 
       const yy =
         y +
-        Math.floor(i / cols) *
+        Math.floor(
+          i / cols
+        ) *
           cellH;
 
       row.forEach(
@@ -344,7 +379,7 @@ export async function generateReportPDF(report = {}) {
           );
 
           pdf.text(
-            clean(label),
+            label,
             x + 2,
             yy + 3.6
           );
@@ -354,14 +389,11 @@ export async function generateReportPDF(report = {}) {
             "bold"
           );
 
-          const valueLines =
-            lines(
+          pdf.text(
+            safeLines(
               value,
               cellW - 4
-            ).slice(0, 2);
-
-          pdf.text(
-            valueLines,
+            ).slice(0, 2),
             x + 2,
             yy + 7.2
           );
@@ -378,9 +410,10 @@ export async function generateReportPDF(report = {}) {
     );
   };
 
-  /*
-   * Header setiap halaman
-   */
+  const statusText = (
+    status
+  ) => clean(status);
+
   const header = (
     pageLabel
   ) => {
@@ -416,7 +449,7 @@ export async function generateReportPDF(report = {}) {
       W - M,
       12,
       {
-        align: "right",
+        align: "right"
       }
     );
 
@@ -425,16 +458,13 @@ export async function generateReportPDF(report = {}) {
       W - M,
       16,
       {
-        align: "right",
+        align: "right"
       }
     );
 
     line(20);
   };
 
-  /*
-   * Footer
-   */
   const footer = (
     pageNo,
     totalPages
@@ -457,7 +487,7 @@ export async function generateReportPDF(report = {}) {
       W / 2,
       289,
       {
-        align: "center",
+        align: "center"
       }
     );
 
@@ -466,17 +496,14 @@ export async function generateReportPDF(report = {}) {
       W - M,
       289,
       {
-        align: "right",
+        align: "right"
       }
     );
   };
 
-  /*
-   * ============================================================
-   * HALAMAN 1
-   * IDENTITAS LAPORAN
-   * ============================================================
-   */
+  /* ============================================================
+     PAGE 1
+  ============================================================ */
 
   header(
     isPM
@@ -503,7 +530,7 @@ export async function generateReportPDF(report = {}) {
   );
 
   pdf.text(
-    "Laporan pemeliharaan",
+    "Pemeliharaan cooling system",
     M,
     35
   );
@@ -519,7 +546,7 @@ export async function generateReportPDF(report = {}) {
       ["Tanggal", reportDate],
       ["Jam", reportTime],
       ["Nama Teknisi", technician],
-      ["Customer", customerName],
+      ["Vendor / Customer", customerName],
     ],
     y,
     2
@@ -530,22 +557,10 @@ export async function generateReportPDF(report = {}) {
 
     y = fieldTable(
       [
-        [
-          "Dilaporkan oleh",
-          form.reportedBy,
-        ],
-        [
-          "Kontak",
-          form.contact,
-        ],
-        [
-          "Jenis CM",
-          form.slaType,
-        ],
-        [
-          "Target SLA",
-          form.slaTarget,
-        ],
+        ["Reported by", form.reportedBy],
+        ["Kontak", form.contact],
+        ["Jenis CM", form.slaType],
+        ["Target SLA", form.slaTarget],
       ],
       y,
       2
@@ -563,32 +578,32 @@ export async function generateReportPDF(report = {}) {
     ["Field", "Data"],
     [
       [
-        "ID Unit",
-        form.unitId,
+        "Unit",
+        form.unitId
       ],
       [
-        "Jenis Unit",
-        form.unitType,
+        "Jenis",
+        form.unitType
       ],
       [
         "Lokasi / Ruang",
-        form.locationRoom,
+        form.locationRoom
       ],
       [
-        "Nama Teknisi",
-        technician,
+        "Teknisi",
+        technician
       ],
     ],
     M,
     y,
     [
       48,
-      CW - 48,
+      CW - 48
     ],
     {
       rowH: 7,
       fontSize: 6.2,
-      firstColBold: true,
+      firstColBold: true
     }
   );
 
@@ -599,66 +614,65 @@ export async function generateReportPDF(report = {}) {
     y
   );
 
-  const detailRows = [
-    [
-      "Status laporan",
-      report.status,
-    ],
-    [
-      "Tanggal",
-      reportDate,
-    ],
-    [
-      "Jam",
-      reportTime,
-    ],
-    [
-      "ID Form",
-      form.formId,
-    ],
-  ];
-
-  if (!isPM) {
-    detailRows.push(
-      [
-        "Jenis CM",
-        form.slaType,
-      ],
-      [
-        "Target SLA",
-        form.slaTarget,
-      ],
-      [
-        "Realisasi",
-        form.slaRealization,
-      ],
-      [
-        "Status SLA",
-        form.slaStatus,
-      ]
-    );
-  }
-
   y = table(
     ["Field", "Data"],
-    detailRows,
+    [
+      [
+        "Status laporan",
+        statusText(
+          report.status
+        )
+      ],
+      [
+        "Tanggal",
+        reportDate
+      ],
+      [
+        "Jam",
+        reportTime
+      ],
+      [
+        "ID Form",
+        form.formId
+      ],
+      ...(isPM
+        ? []
+        : [
+            [
+              "Jenis CM",
+              form.slaType
+            ],
+            [
+              "Target SLA",
+              form.slaTarget
+            ],
+            [
+              "Realisasi",
+              form.slaRealization
+            ],
+            [
+              "Status SLA",
+              form.slaStatus
+            ],
+          ]),
+    ],
     M,
     y,
     [
       48,
-      CW - 48,
+      CW - 48
     ],
     {
       rowH: 7,
       fontSize: 6.2,
-      firstColBold: true,
+      firstColBold: true
     }
   );
 
   y += 4;
 
   y = section(
-    "C. Perangkat",
+    "C. Produk / perangkat",
     y
   );
 
@@ -667,26 +681,26 @@ export async function generateReportPDF(report = {}) {
       "Field",
       "Data",
       "Field",
-      "Data",
+      "Data"
     ],
     [
       [
         "Produk",
         form.product,
         "Model",
-        form.model,
+        form.model
       ],
       [
         "Type / Form",
         form.typeForm,
         "Serial Number",
-        form.serialNumber,
+        form.serialNumber
       ],
       [
         "Battery Type",
         form.batteryType,
         "Battery Quantity",
-        form.batteryQuantity,
+        form.batteryQuantity
       ],
     ],
     M,
@@ -695,12 +709,12 @@ export async function generateReportPDF(report = {}) {
       31,
       62,
       31,
-      62,
+      70
     ],
     {
       rowH: 7,
-      fontSize: 6,
-      firstColBold: true,
+      fontSize: 6.0,
+      firstColBold: true
     }
   );
 
@@ -711,12 +725,9 @@ export async function generateReportPDF(report = {}) {
 
   pdf.addPage();
 
-  /*
-   * ============================================================
-   * HALAMAN 2
-   * FORM PM / CM
-   * ============================================================
-   */
+  /* ============================================================
+     PAGE 2
+  ============================================================ */
 
   header(
     isPM
@@ -726,9 +737,6 @@ export async function generateReportPDF(report = {}) {
 
   y = 25;
 
-  /*
-   * PM
-   */
   if (isPM) {
     y = section(
       "A. SLA suhu & RH - target vs aktual",
@@ -740,35 +748,35 @@ export async function generateReportPDF(report = {}) {
         "Parameter",
         "Target",
         "Aktual",
-        "Status",
+        "Status"
       ],
       [
         [
-          "Suhu Ruang / Return (°C)",
+          "Suhu Ruang / Return (C)",
           form.environment
             ?.roomTempTarget,
           form.environment
             ?.roomTempActual,
           form.environment
-            ?.roomTempStatus,
+            ?.roomTempStatus
         ],
         [
-          "Suhu Supply (°C)",
+          "Suhu Supply (C)",
           form.environment
             ?.supplyTempTarget,
           form.environment
             ?.supplyTempActual,
           form.environment
-            ?.supplyTempStatus,
+            ?.supplyTempStatus
         ],
         [
-          "ΔT Return - Supply (°C)",
+          "Delta T Return - Supply (C)",
           form.environment
             ?.deltaTTarget,
           form.environment
             ?.deltaTActual,
           form.environment
-            ?.deltaTStatus,
+            ?.deltaTStatus
         ],
         [
           "RH (%)",
@@ -777,7 +785,7 @@ export async function generateReportPDF(report = {}) {
           form.environment
             ?.rhActual,
           form.environment
-            ?.rhStatus,
+            ?.rhStatus
         ],
       ],
       M,
@@ -786,12 +794,12 @@ export async function generateReportPDF(report = {}) {
         78,
         38,
         38,
-        CW - 154,
+        CW - 154
       ],
       {
         rowH: 7,
-        fontSize: 6,
-        firstColBold: true,
+        fontSize: 6.0,
+        firstColBold: true
       }
     );
 
@@ -802,159 +810,163 @@ export async function generateReportPDF(report = {}) {
       y
     );
 
-    const parameters = [
+    const params = [
       [
         "Suction Pressure (LP)",
         "suctionPressure",
-        "psi",
+        "psi"
       ],
       [
         "Discharge Pressure (HP)",
         "dischargePressure",
-        "psi",
+        "psi"
       ],
       [
         "Leak Check",
         "leakCheck",
-        "-",
+        "-"
       ],
       [
         "Arus Fan Indoor / Blower",
         "indoorFanCurrent",
-        "A",
+        "A"
       ],
       [
         "Flow Fan Indoor / Blower",
         "indoorFanFlow",
-        "m/s",
+        "m/s"
       ],
       [
         "Arus Fan Outdoor",
         "outdoorFanCurrent",
-        "A",
+        "A"
       ],
       [
         "Flow Fan Outdoor",
         "outdoorFanFlow",
-        "m/s",
+        "m/s"
       ],
       [
         "Suara / Getaran",
         "soundVibration",
-        "-",
+        "-"
       ],
       [
         "Aliran drain lancar",
         "drainFlow",
-        "-",
+        "-"
       ],
       [
         "Tidak ada bocor / overflow",
         "noLeakOverflow",
-        "-",
+        "-"
       ],
       [
         "Setpoint Temp",
         "setpointTemp",
-        "°C",
+        "C"
       ],
       [
         "Setpoint RH",
         "setpointRh",
-        "%",
+        "%"
       ],
       [
         "Alarm aktif / Log alarm",
         "alarmLog",
-        "-",
+        "-"
       ],
       [
         "Tegangan L-L",
         "voltageLL",
-        "V",
+        "V"
       ],
       [
         "Tegangan L-N",
         "voltageLN",
-        "V",
+        "V"
       ],
       [
         "Arus Kompresor R / S / T",
         "compressorCurrent",
-        "A",
+        "A"
       ],
       [
         "Arus Fan",
         "fanCurrent",
-        "A",
+        "A"
       ],
       [
         "Arus Heater",
         "heaterCurrent",
-        "A",
+        "A"
       ],
       [
         "Terminal / koneksi",
         "terminalConnection",
-        "-",
+        "-"
       ],
       [
         "Filter dibersihkan",
         "filterCleaned",
-        "Tanggal / PIC",
+        "Tanggal / PIC"
       ],
       [
         "Filter diganti",
         "filterReplaced",
-        "Tanggal / PIC",
+        "Tanggal / PIC"
       ],
       [
         "Coil evaporator dibersihkan",
         "coilEvaporator",
-        "-",
+        "-"
       ],
       [
         "Coil kondensor dibersihkan",
         "coilCondenser",
-        "-",
+        "-"
       ],
       [
         "Refrigeran",
         "refrigerant",
-        "-",
+        "-"
       ],
       [
         "Fan / Motor",
         "fanMotor",
-        "-",
+        "-"
       ],
       [
         "Drain",
         "drain",
-        "-",
+        "-"
       ],
       [
         "Kontrol / Alarm",
         "controlAlarm",
-        "-",
+        "-"
       ],
       [
         "Listrik",
         "electrical",
-        "-",
+        "-"
       ],
     ];
 
-    const parameterRows =
-      parameters.map(
-        ([label, key, unit]) => {
+    const rows =
+      params.map(
+        ([
+          label,
+          key,
+          unit
+        ]) => {
           const item =
             form.pmParameters
               ?.[
                 key
               ] || {};
 
-          let value =
+          let val =
             item.value;
 
           if (
@@ -963,10 +975,10 @@ export async function generateReportPDF(report = {}) {
             key ===
               "filterReplaced"
           ) {
-            value = [
+            val = [
               item.value,
               item.date,
-              item.pic,
+              item.pic
             ]
               .filter(has)
               .join(" | ");
@@ -975,9 +987,9 @@ export async function generateReportPDF(report = {}) {
           return [
             label,
             unit,
-            value,
+            val,
             item.status,
-            item.notes,
+            item.notes
           ];
         }
       );
@@ -988,9 +1000,9 @@ export async function generateReportPDF(report = {}) {
         "Unit",
         "Nilai",
         "Status",
-        "Catatan",
+        "Catatan"
       ],
-      parameterRows,
+      rows,
       M,
       y,
       [
@@ -998,19 +1010,15 @@ export async function generateReportPDF(report = {}) {
         18,
         38,
         24,
-        CW - 152,
+        CW - 152
       ],
       {
         rowH: 5.8,
         fontSize: 5.5,
+        firstColBold: false
       }
     );
-  }
-
-  /*
-   * CM
-   */
-  else {
+  } else {
     y = section(
       "A. Identitas kejadian / tiket",
       y
@@ -1021,32 +1029,32 @@ export async function generateReportPDF(report = {}) {
         "Field",
         "Data",
         "Field",
-        "Data",
+        "Data"
       ],
       [
         [
           "ID Form",
           form.formId,
           "ID Unit",
-          form.unitId,
+          form.unitId
         ],
         [
           "Tanggal lapor",
           form.reportDate,
           "Jam lapor",
-          form.reportTime,
+          form.reportTime
         ],
         [
           "Dilaporkan oleh",
           form.reportedBy,
           "Kontak",
-          form.contact,
+          form.contact
         ],
         [
           "Lokasi / Ruang",
           form.locationRoom,
           "Nama Teknisi",
-          technician,
+          technician
         ],
       ],
       M,
@@ -1055,12 +1063,12 @@ export async function generateReportPDF(report = {}) {
         31,
         64,
         31,
-        62,
+        68
       ],
       {
         rowH: 7,
-        fontSize: 6,
-        firstColBold: true,
+        fontSize: 6.0,
+        firstColBold: true
       }
     );
 
@@ -1074,45 +1082,45 @@ export async function generateReportPDF(report = {}) {
     y = table(
       [
         "Tahap",
-        "Waktu",
+        "Waktu"
       ],
       [
         [
           "Lapor masuk",
           form.timeline
-            ?.laporMasuk,
+            ?.laporMasuk
         ],
         [
           "Response / datang ke lokasi",
           form.timeline
-            ?.response,
+            ?.response
         ],
         [
           "Mulai perbaikan",
           form.timeline
-            ?.mulaiPerbaikan,
+            ?.mulaiPerbaikan
         ],
         [
           "Selesai perbaikan",
           form.timeline
-            ?.selesaiPerbaikan,
+            ?.selesaiPerbaikan
         ],
         [
           "Verifikasi / monitoring",
           form.timeline
-            ?.verifikasi,
+            ?.verifikasi
         ],
       ],
       M,
       y,
       [
         78,
-        CW - 78,
+        CW - 78
       ],
       {
         rowH: 7,
-        fontSize: 6,
-        firstColBold: true,
+        fontSize: 6.0,
+        firstColBold: true
       }
     );
 
@@ -1123,14 +1131,14 @@ export async function generateReportPDF(report = {}) {
         "Jenis CM",
         "Target SLA",
         "Realisasi",
-        "Status SLA",
+        "Status SLA"
       ],
       [
         [
           form.slaType,
           form.slaTarget,
           form.slaRealization,
-          form.slaStatus,
+          form.slaStatus
         ],
       ],
       M,
@@ -1139,11 +1147,11 @@ export async function generateReportPDF(report = {}) {
         65,
         45,
         45,
-        CW - 155,
+        CW - 155
       ],
       {
         rowH: 8,
-        fontSize: 6,
+        fontSize: 6.0
       }
     );
 
@@ -1157,35 +1165,35 @@ export async function generateReportPDF(report = {}) {
     y = table(
       [
         "Field",
-        "Data",
+        "Data"
       ],
       [
         [
           "Alarm / Code",
           form.diagnosis
-            ?.alarmCode,
+            ?.alarmCode
         ],
         [
           "Gejala / Keluhan",
           form.diagnosis
-            ?.symptom,
+            ?.symptom
         ],
         [
           "Risiko / Impact",
           form.diagnosis
-            ?.riskImpact,
+            ?.riskImpact
         ],
       ],
       M,
       y,
       [
         48,
-        CW - 48,
+        CW - 48
       ],
       {
         rowH: 8,
-        fontSize: 6,
-        firstColBold: true,
+        fontSize: 6.0,
+        firstColBold: true
       }
     );
 
@@ -1198,12 +1206,12 @@ export async function generateReportPDF(report = {}) {
 
     y = table(
       [
-        "Detail tindakan",
+        "Detail tindakan"
       ],
       [
         [
           form.diagnosis
-            ?.workDone,
+            ?.workDone
         ],
       ],
       M,
@@ -1211,7 +1219,7 @@ export async function generateReportPDF(report = {}) {
       [CW],
       {
         rowH: 18,
-        fontSize: 6,
+        fontSize: 6.0
       }
     );
 
@@ -1224,11 +1232,11 @@ export async function generateReportPDF(report = {}) {
 
     y = table(
       [
-        "Nama Spare Part / Material",
+        "Nama Spare Part / Material"
       ],
       [
         [
-          form.sparePart,
+          form.sparePart
         ],
       ],
       M,
@@ -1236,7 +1244,7 @@ export async function generateReportPDF(report = {}) {
       [CW],
       {
         rowH: 10,
-        fontSize: 6,
+        fontSize: 6.0
       }
     );
   }
@@ -1248,12 +1256,9 @@ export async function generateReportPDF(report = {}) {
 
   pdf.addPage();
 
-  /*
-   * ============================================================
-   * HALAMAN 3
-   * EVIDENCE + TEMUAN + SIGNATURE
-   * ============================================================
-   */
+  /* ============================================================
+     PAGE 3
+  ============================================================ */
 
   header(
     isPM
@@ -1263,9 +1268,6 @@ export async function generateReportPDF(report = {}) {
 
   y = 25;
 
-  /*
-   * CM verification
-   */
   if (!isPM) {
     y = section(
       "F. Hasil verifikasi setelah perbaikan",
@@ -1274,43 +1276,43 @@ export async function generateReportPDF(report = {}) {
 
     y = table(
       [
-        "Field",
-        "Data",
+        "Parameter",
+        "Data"
       ],
       [
         [
           "Room / Area",
           form.diagnosis
-            ?.returnRoom,
+            ?.returnRoom
         ],
         [
           "Durasi pantau",
           form.diagnosis
-            ?.monitoringDuration,
+            ?.monitoringDuration
         ],
         [
           "Catatan",
           form.diagnosis
-            ?.verificationNote,
+            ?.verificationNote
         ],
       ],
       M,
       y,
       [
         48,
-        CW - 48,
+        CW - 48
       ],
       {
         rowH: 8,
-        fontSize: 6,
-        firstColBold: true,
+        fontSize: 6.0,
+        firstColBold: true
       }
     );
 
     y += 4;
 
     y = section(
-      "G. Evidence - before / after",
+      "G. Evidence (foto / log) - before / after",
       y
     );
 
@@ -1318,13 +1320,13 @@ export async function generateReportPDF(report = {}) {
       [
         "Evidence ID",
         "Before",
-        "After",
+        "After"
       ],
       [
         [
           form.evidenceId,
           form.evidenceBefore,
-          form.evidenceAfter,
+          form.evidenceAfter
         ],
       ],
       M,
@@ -1332,19 +1334,14 @@ export async function generateReportPDF(report = {}) {
       [
         50,
         70,
-        CW - 120,
+        CW - 120
       ],
       {
         rowH: 12,
-        fontSize: 6,
+        fontSize: 6.0
       }
     );
-  }
-
-  /*
-   * PM kegiatan 2 bulanan
-   */
-  else {
+  } else {
     y = section(
       "C. Kegiatan 2-bulanan",
       y
@@ -1353,48 +1350,48 @@ export async function generateReportPDF(report = {}) {
     y = table(
       [
         "Field",
-        "Data",
+        "Data"
       ],
       [
         [
           "Evidence ID",
-          form.evidenceId,
+          form.evidenceId
         ],
         [
           "Filter dibersihkan / diganti",
           form.pmParameters
             ?.filterCleaned
-            ?.date,
+            ?.date
         ],
         [
           "PIC",
           form.pmParameters
             ?.filterCleaned
-            ?.pic,
+            ?.pic
         ],
         [
           "Filter diganti - tanggal",
           form.pmParameters
             ?.filterReplaced
-            ?.date,
+            ?.date
         ],
         [
           "Filter diganti - PIC",
           form.pmParameters
             ?.filterReplaced
-            ?.pic,
+            ?.pic
         ],
       ],
       M,
       y,
       [
         65,
-        CW - 65,
+        CW - 65
       ],
       {
         rowH: 7,
-        fontSize: 6,
-        firstColBold: true,
+        fontSize: 6.0,
+        firstColBold: true
       }
     );
   }
@@ -1402,74 +1399,74 @@ export async function generateReportPDF(report = {}) {
   y += 4;
 
   y = section(
-    "D. Temuan & tindak lanjut",
+    "Temuan & tindak lanjut",
     y
   );
 
   y = table(
     [
       "Field",
-      "Data",
+      "Data"
     ],
     [
       [
         "Temuan Utama",
         form.findings
-          ?.mainFinding,
+          ?.mainFinding
       ],
       [
         "Tindak Lanjut",
         form.findings
-          ?.followUp,
+          ?.followUp
       ],
       [
         "Target Selesai",
         form.findings
-          ?.targetCompletion,
+          ?.targetCompletion
       ],
       [
         "PIC",
         form.findings
-          ?.pic,
+          ?.pic
       ],
       [
         "Diperlukan CM",
         form.findings
-          ?.requiredCM,
+          ?.requiredCM
       ],
       [
         "No. WO / CM",
         form.findings
-          ?.workOrderCM,
+          ?.workOrderCM
       ],
     ],
     M,
     y,
     [
       48,
-      CW - 48,
+      CW - 48
     ],
     {
       rowH: 8,
-      fontSize: 6,
-      firstColBold: true,
+      fontSize: 6.0,
+      firstColBold: true
     }
   );
 
   y += 4;
 
   y = section(
-    "E. Catatan",
+    "Catatan",
     y
   );
 
   y = table(
     [
-      "Catatan pekerjaan",
+      "Catatan pekerjaan"
     ],
     [
       [
-        form.notes,
+        form.notes
       ],
     ],
     M,
@@ -1477,20 +1474,17 @@ export async function generateReportPDF(report = {}) {
     [CW],
     {
       rowH: 18,
-      fontSize: 6,
+      fontSize: 6.0
     }
   );
 
-  /*
-   * Lampiran foto
-   */
   if (
     form.attachmentPhoto
   ) {
     y += 4;
 
     y = section(
-      "F. Lampiran foto",
+      "Lampiran foto",
       y
     );
 
@@ -1516,7 +1510,9 @@ export async function generateReportPDF(report = {}) {
 
       y =
         imageY + 40;
-    } catch (error) {
+    } catch (
+      error
+    ) {
       console.warn(
         "Attachment image could not be added:",
         error
@@ -1524,14 +1520,18 @@ export async function generateReportPDF(report = {}) {
     }
   }
 
-  /*
-   * ============================================================
-   * TANDA TANGAN
-   * ============================================================
-   */
+  /* ============================================================
+     SIGNATURE AREA
+     Tidak ada lagi tulisan besar
+     "Technician SCAN TO SIGN"
+     "Vendor SCAN TO SIGN"
+  ============================================================ */
 
   y = Math.min(
-    Math.max(y + 6, 215),
+    Math.max(
+      y + 6,
+      215
+    ),
     238
   );
 
@@ -1550,14 +1550,16 @@ export async function generateReportPDF(report = {}) {
 
   const sigH = 38;
 
-  const leftSigX =
-    M;
+  const leftSigX = M;
 
   const rightSigX =
     M +
     sigW +
     sigGap;
 
+  /*
+   * Kotak tanda tangan teknisi
+   */
   rect(
     leftSigX,
     sigTop,
@@ -1565,6 +1567,9 @@ export async function generateReportPDF(report = {}) {
     sigH
   );
 
+  /*
+   * Kotak tanda tangan vendor
+   */
   rect(
     rightSigX,
     sigTop,
@@ -1572,25 +1577,8 @@ export async function generateReportPDF(report = {}) {
     sigH
   );
 
-  font(
-    6,
-    "normal"
-  );
-
-  pdf.text(
-    "Teknisi",
-    leftSigX + 3,
-    sigTop + 5
-  );
-
-  pdf.text(
-    "Customer",
-    rightSigX + 3,
-    sigTop + 5
-  );
-
   /*
-   * Signature teknisi
+   * Technician signature
    */
   if (
     report.technicianSignature
@@ -1604,7 +1592,9 @@ export async function generateReportPDF(report = {}) {
         58,
         22
       );
-    } catch (error) {
+    } catch (
+      error
+    ) {
       console.warn(
         "Technician signature could not be added:",
         error
@@ -1613,33 +1603,39 @@ export async function generateReportPDF(report = {}) {
   }
 
   /*
-   * Signature customer
-   * Jika belum ada, tampilkan QR
+   * Vendor signature
    */
-  const customerSignature =
+  const clientSignature =
     report.vendorSignature ||
     report.clientSignature ||
     "";
 
   if (
-    customerSignature
+    clientSignature
   ) {
     try {
       pdf.addImage(
-        customerSignature,
+        clientSignature,
         "PNG",
         rightSigX + 6,
         sigTop + 8,
         58,
         22
       );
-    } catch (error) {
+    } catch (
+      error
+    ) {
       console.warn(
-        "Customer signature could not be added:",
+        "Vendor signature could not be added:",
         error
       );
     }
   } else {
+    /*
+     * Kalau vendor belum tanda tangan,
+     * tampilkan QR saja.
+     */
+
     const browserOrigin =
       typeof window !==
       "undefined"
@@ -1662,7 +1658,7 @@ export async function generateReportPDF(report = {}) {
           ).replace(
             /\/+$/,
             ""
-          )}/sign/customer/${encodeURIComponent(
+          )}/sign/vendor/${encodeURIComponent(
             report.id
           )}`;
 
@@ -1687,18 +1683,9 @@ export async function generateReportPDF(report = {}) {
           25,
           25
         );
-
-        font(
-          5.2,
-          "normal"
-        );
-
-        pdf.text(
-          "Scan untuk tanda tangan",
-          rightSigX + 3,
-          sigTop + 31
-        );
-      } catch (error) {
+      } catch (
+        error
+      ) {
         console.warn(
           "QR generation error:",
           error
@@ -1708,7 +1695,7 @@ export async function generateReportPDF(report = {}) {
   }
 
   /*
-   * Nama di bawah signature
+   * Nama teknisi dan vendor.
    */
   font(
     6.2,
@@ -1718,13 +1705,17 @@ export async function generateReportPDF(report = {}) {
   pdf.text(
     technician,
     leftSigX + 3,
-    sigTop + sigH - 4
+    sigTop +
+      sigH -
+      4
   );
 
   pdf.text(
     customerName,
     rightSigX + 3,
-    sigTop + sigH - 4
+    sigTop +
+      sigH -
+      4
   );
 
   footer(
@@ -1732,11 +1723,9 @@ export async function generateReportPDF(report = {}) {
     3
   );
 
-  /*
-   * ============================================================
-   * OUTPUT
-   * ============================================================
-   */
+  /* ============================================================
+     OUTPUT
+  ============================================================ */
 
   if (
     report.openInNewTab &&
@@ -1749,7 +1738,10 @@ export async function generateReportPDF(report = {}) {
   }
 
   const fileName =
-    `${report.id || "report"}.pdf`;
+    `${
+      report.id ||
+      "report"
+    }.pdf`;
 
   const blob =
     pdf.output("blob");
@@ -1765,6 +1757,7 @@ export async function generateReportPDF(report = {}) {
     );
 
   link.href = url;
+
   link.download =
     fileName;
 
@@ -1781,9 +1774,11 @@ export async function generateReportPDF(report = {}) {
     link
   );
 
-  setTimeout(() => {
-    URL.revokeObjectURL(
-      url
-    );
-  }, 1000);
+  setTimeout(
+    () =>
+      URL.revokeObjectURL(
+        url
+      ),
+    1000
+  );
 }

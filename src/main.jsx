@@ -9,6 +9,10 @@ import {
 } from "firebase/firestore";
 const NETWORK_HOST = "192.168.56.1";
 const NETWORK_PORT = "5173";
+const PUBLIC_APP_URL = "https://erep.vercel.app";
+
+const getSignUrl = (role, reportId) =>
+  `${PUBLIC_APP_URL}/sign/${role}/${encodeURIComponent(reportId)}`;
 import React, {
   useEffect,
   useRef,
@@ -61,7 +65,6 @@ import "./notification.css";
 import "./style_admin_vendor_full.css";
 import "./style_sidebar_toggle.css";
 import "./style_account_password.css";
-import "./style_work_ui.css";
 
 
 /* =========================================================
@@ -558,8 +561,9 @@ function App() {
             ...item.data(),
           }));
 
-        // Firestore is the source of truth for reports.
-        // An empty collection must remain empty after re-login.
+        // Firestore is the single source of truth for reports.
+        // If all reports were deleted, keep the UI empty after reload
+        // instead of falling back to the old demo report.
         setReports(firebaseReports);
 
         // TEMPLATES
@@ -1957,6 +1961,64 @@ function TopBar({
           .slice(0, 5)
       : [];
 
+  // Notification badge hanya muncul untuk notifikasi yang belum dibaca.
+  // Key memakai ID + status supaya perubahan status report dianggap sebagai
+  // notifikasi baru meskipun report ID-nya sama.
+  const getNotificationKey = (report) =>
+    `${report.id}:${report.status}`;
+
+  const [
+    readNotificationKeys,
+    setReadNotificationKeys,
+  ] = useState(() => {
+    try {
+      const stored =
+        localStorage.getItem("ereport_read_notifications");
+
+      return stored
+        ? JSON.parse(stored)
+        : [];
+    } catch {
+      return [];
+    }
+  });
+
+  const unreadNotifications =
+    notifications.filter(
+      (report) =>
+        !readNotificationKeys.includes(
+          getNotificationKey(report)
+        )
+    );
+
+  const openNotificationPanel = () => {
+    const currentKeys = notifications.map(
+      getNotificationKey
+    );
+
+    const nextReadKeys = Array.from(
+      new Set([
+        ...readNotificationKeys,
+        ...currentKeys,
+      ])
+    );
+
+    setReadNotificationKeys(
+      nextReadKeys
+    );
+
+    try {
+      localStorage.setItem(
+        "ereport_read_notifications",
+        JSON.stringify(nextReadKeys)
+      );
+    } catch {
+      // Ignore localStorage errors.
+    }
+
+    setShowNotifications(true);
+  };
+
   return (
 
     <div
@@ -1987,11 +2049,13 @@ function TopBar({
           <button
             type="button"
             className="notification"
-            onClick={() =>
-              setShowNotifications(
-                (prev) => !prev
-              )
-            }
+            onClick={() => {
+              if (showNotifications) {
+                setShowNotifications(false);
+              } else {
+                openNotificationPanel();
+              }
+            }}
             aria-label="Notifications"
           >
 
@@ -2000,15 +2064,15 @@ function TopBar({
             />
 
             {
-              notifications.length > 0 && (
+              unreadNotifications.length > 0 && (
 
                 <span
                   className="notificationBadge"
                 >
                   {
-                    notifications.length > 9
+                    unreadNotifications.length > 9
                       ? "9+"
-                      : notifications.length
+                      : unreadNotifications.length
                   }
                 </span>
 
@@ -2805,6 +2869,189 @@ function BackButton({
    REPORT DETAIL
 ========================================================= */
 
+function SharedReportFields({
+  form,
+  updateField,
+  updateNestedField,
+  readOnly = false,
+}) {
+  const Field = ({ label, field, type = "text" }) =>
+    readOnly ? (
+      <InfoRow
+        label={label}
+        value={form?.[field] || "-"}
+      />
+    ) : (
+      <EditableField
+        label={label}
+        type={type}
+        value={form?.[field] || ""}
+        onChange={(value) => updateField(field, value)}
+      />
+    );
+
+  const Select = ({ label, field, options }) =>
+    readOnly ? (
+      <InfoRow
+        label={label}
+        value={form?.[field] || "-"}
+      />
+    ) : (
+      <SelectField
+        label={label}
+        value={form?.[field] || ""}
+        options={options}
+        onChange={(value) => updateField(field, value)}
+      />
+    );
+
+  const measurementFields = [
+    ["Input R-S", "inputVoltage", "rs"],
+    ["Input S-T", "inputVoltage", "st"],
+    ["Input T-R", "inputVoltage", "tr"],
+    ["Input R-N", "inputVoltage", "rn"],
+    ["Input S-N", "inputVoltage", "sn"],
+    ["Input T-N", "inputVoltage", "tn"],
+    ["Input Frequency", "inputVoltage", "frequency"],
+    ["Output R-S", "outputVoltage", "rs"],
+    ["Output S-T", "outputVoltage", "st"],
+    ["Output T-R", "outputVoltage", "tr"],
+    ["Output R-N", "outputVoltage", "rn"],
+    ["Output S-N", "outputVoltage", "sn"],
+    ["Output T-N", "outputVoltage", "tn"],
+    ["Output Frequency", "outputVoltage", "frequency"],
+    ["Input Current R", "inputCurrent", "r"],
+    ["Input Current S", "inputCurrent", "s"],
+    ["Input Current T", "inputCurrent", "t"],
+    ["Output Current R", "outputCurrent", "r"],
+    ["Output Current S", "outputCurrent", "s"],
+    ["Output Current T", "outputCurrent", "t"],
+  ];
+
+  return (
+    <>
+      <InfoBlock title="Product">
+        <Field label="Product" field="product" />
+        <Field label="Model" field="model" />
+        <Field label="Type / Form" field="typeForm" />
+        <Field label="Serial Number" field="serialNumber" />
+        <Field label="Battery Type" field="batteryType" />
+        <Field label="Battery Quantity" field="batteryQuantity" type="number" />
+      </InfoBlock>
+
+      <InfoBlock title="Work & Environment">
+        <Field label="Work Status" field="workStatus" />
+        <Field label="Repair No." field="repairNo" />
+        <Field label="Temperature (°C)" field="temperature" type="number" />
+
+        <Select
+          label="Ventilation"
+          field="ventilation"
+          options={["Good", "Fair", "Poor"]}
+        />
+
+        <Select
+          label="Area Condition"
+          field="areaCondition"
+          options={["Clean", "Needs Cleaning", "Poor"]}
+        />
+
+        <Select
+          label="Wiring"
+          field="wiring"
+          options={["Good", "Needs Attention", "Poor"]}
+        />
+
+        <Select
+          label="Fan Rotation"
+          field="fanRotation"
+          options={["Good", "Fair", "Poor"]}
+        />
+
+        <Field label="Load Application" field="loadApplication" />
+        <Field label="Parts Used" field="partsUsed" />
+        <Field
+          label="Replacement Recommended"
+          field="partsReplacementRecommended"
+        />
+      </InfoBlock>
+
+      <InfoBlock title="Measurements">
+        {measurementFields.map(([label, group, field]) => {
+          const value = form?.[group]?.[field] || "";
+
+          return readOnly ? (
+            <InfoRow
+              key={`${group}-${field}`}
+              label={label}
+              value={value || "-"}
+            />
+          ) : (
+            <EditableField
+              key={`${group}-${field}`}
+              label={label}
+              value={value}
+              onChange={(nextValue) =>
+                updateNestedField(
+                  group,
+                  field,
+                  nextValue
+                )
+              }
+            />
+          );
+        })}
+
+        <Field label="DC Bus Voltage" field="dcBusVoltage" />
+        <Field label="Battery Charge Voltage" field="batteryChargeVoltage" />
+        <Field label="Battery Total Voltage" field="batteryTotalVoltage" />
+        <Field label="Battery Charge Current" field="batteryChargeCurrent" />
+        <Field label="Ground Voltage" field="groundVoltage" />
+        <Field label="Low Batteries" field="lowBatteries" />
+      </InfoBlock>
+
+      <InfoBlock title="Notes / Action Taken">
+        {readOnly ? (
+          <>
+            <InfoRow
+              label="Notes"
+              value={form?.notes || "-"}
+            />
+            <InfoRow
+              label="Other Actions"
+              value={form?.actionsTaken?.others || "-"}
+            />
+          </>
+        ) : (
+          <>
+            <textarea
+              className="reportTextarea"
+              value={form?.notes || ""}
+              placeholder="Write notes..."
+              onChange={(e) =>
+                updateField("notes", e.target.value)
+              }
+            />
+
+            <textarea
+              className="reportTextarea"
+              value={form?.actionsTaken?.others || ""}
+              placeholder="Other actions taken..."
+              onChange={(e) =>
+                updateNestedField(
+                  "actionsTaken",
+                  "others",
+                  e.target.value
+                )
+              }
+            />
+          </>
+        )}
+      </InfoBlock>
+    </>
+  );
+}
+
 function ReportDetail({
   report,
   user,
@@ -3377,7 +3624,7 @@ function ReportDetail({
     ) {
 
      const signUrl =
-  `http://${NETWORK_HOST}:${NETWORK_PORT}/sign/${report.id}`;
+  getSignUrl("client", report.id);
 
 
       return (
@@ -3653,245 +3900,11 @@ function ReportDetail({
         </InfoBlock>
 
 
-        {/* =================================================
-            PRODUCT
-        ================================================= */}
-
-        <InfoBlock
-          title="Product"
-        >
-
-          <EditableField
-            label="Product"
-            value={
-              form.product
-            }
-
-            onChange={
-              (value) =>
-                updateField(
-                  "product",
-                  value
-                )
-            }
-          />
-
-
-          <EditableField
-            label="Model"
-            value={
-              form.model
-            }
-
-            onChange={
-              (value) =>
-                updateField(
-                  "model",
-                  value
-                )
-            }
-          />
-
-
-          <EditableField
-            label="Serial Number"
-            value={
-              form.serialNumber
-            }
-
-            onChange={
-              (value) =>
-                updateField(
-                  "serialNumber",
-                  value
-                )
-            }
-          />
-
-
-          <EditableField
-            label="Battery Quantity"
-            type="number"
-            value={
-              form.batteryQuantity
-            }
-
-            onChange={
-              (value) =>
-                updateField(
-                  "batteryQuantity",
-                  value
-                )
-            }
-          />
-
-        </InfoBlock>
-
-
-        {/* =================================================
-            ENVIRONMENT
-        ================================================= */}
-
-        <InfoBlock
-          title="Environment & Visual Check"
-        >
-
-          <EditableField
-            label="Air Temperature (°C)"
-            type="number"
-            value={
-              form.temperature
-            }
-
-            onChange={
-              (value) =>
-                updateField(
-                  "temperature",
-                  value
-                )
-            }
-          />
-
-
-          <SelectField
-            label="Circulation & Ventilation"
-            value={
-              form.ventilation
-            }
-
-            options={[
-              "Good",
-              "Fair",
-              "Poor",
-            ]}
-
-            onChange={
-              (value) =>
-                updateField(
-                  "ventilation",
-                  value
-                )
-            }
-          />
-
-
-          <SelectField
-            label="Area Condition"
-            value={
-              form.areaCondition
-            }
-
-            options={[
-              "Clean",
-              "Needs Cleaning",
-              "Poor",
-            ]}
-
-            onChange={
-              (value) =>
-                updateField(
-                  "areaCondition",
-                  value
-                )
-            }
-          />
-
-
-          <SelectField
-            label="Wiring & Connection"
-            value={
-              form.wiring
-            }
-
-            options={[
-              "Good",
-              "Needs Attention",
-              "Poor",
-            ]}
-
-            onChange={
-              (value) =>
-                updateField(
-                  "wiring",
-                  value
-                )
-            }
-          />
-
-        </InfoBlock>
-
-
-        {/* =================================================
-            MEASUREMENT
-        ================================================= */}
-
-        <InfoBlock
-          title="Data Measurement"
-        >
-
-          <EditableField
-            label="Input Voltage"
-            type="number"
-            value={
-              form.inputVoltage
-            }
-
-            onChange={
-              (value) =>
-                updateField(
-                  "inputVoltage",
-                  value
-                )
-            }
-          />
-
-
-          <EditableField
-            label="Output Voltage"
-            type="number"
-            value={
-              form.outputVoltage
-            }
-
-            onChange={
-              (value) =>
-                updateField(
-                  "outputVoltage",
-                  value
-                )
-            }
-          />
-
-        </InfoBlock>
-
-
-        {/* =================================================
-            NOTES
-        ================================================= */}
-
-        <InfoBlock
-          title="Notes / Action Taken"
-        >
-
-          <textarea
-            className="reportTextarea"
-            value={
-              form.notes
-            }
-
-            placeholder="Write notes..."
-            
-            onChange={
-              (e) =>
-                updateField(
-                  "notes",
-                  e.target.value
-                )
-            }
-          />
-
-        </InfoBlock>
-
+        <SharedReportFields
+          form={form}
+          updateField={updateField}
+          updateNestedField={updateNestedField}
+        />
 
         {/* =================================================
             DIGITAL SIGNATURES
@@ -3913,12 +3926,6 @@ function ReportDetail({
                 className="signatureQrTitle"
               >
                 <span>Technician</span>
-
-                <small>
-                  {report.technicianSigned
-                    ? "SIGNED"
-                    : "SCAN TO SIGN"}
-                </small>
               </div>
 
               {report.technicianSigned &&
@@ -3936,7 +3943,7 @@ function ReportDetail({
 
                 <QRCodeCanvas
                   value={
-                    `http://${NETWORK_HOST}:${NETWORK_PORT}/sign/technician/${report.id}`
+                    getSignUrl("technician", report.id)
                   }
                   size={150}
                   includeMargin
@@ -3960,12 +3967,6 @@ function ReportDetail({
                 className="signatureQrTitle"
               >
                 <span>Vendor</span>
-
-                <small>
-                  {report.clientSigned
-                    ? "SIGNED"
-                    : "SCAN TO SIGN"}
-                </small>
               </div>
 
               {report.clientSigned &&
@@ -3983,7 +3984,7 @@ function ReportDetail({
 
                 <QRCodeCanvas
                   value={
-                    `http://${NETWORK_HOST}:${NETWORK_PORT}/sign/client/${report.id}`
+                    getSignUrl("client", report.id)
                   }
                   size={150}
                   includeMargin
@@ -3992,9 +3993,7 @@ function ReportDetail({
               )}
 
               <p>
-                {report.clientSigned
-                  ? "Vendor signature recorded"
-                  : "Scan this QR to sign as vendor"}
+                {report.client || "-"}
               </p>
 
             </div>
@@ -4333,7 +4332,7 @@ function ReportDetail({
 
                 <QRCodeCanvas
                   value={
-                    `http://${NETWORK_HOST}:${NETWORK_PORT}/sign/client/${report.id}`
+                    getSignUrl("client", report.id)
                   }
                   size={180}
                   includeMargin
@@ -4453,78 +4452,12 @@ function ReportDetail({
 
             </InfoBlock>
 
-            <InfoBlock title="Report Data">
-
-              <div className="adminDataGrid">
-
-                <InfoRow
-                  label="Product"
-                  value={
-                    report.form?.product || "-"
-                  }
-                />
-
-                <InfoRow
-                  label="Model"
-                  value={
-                    report.form?.model || "-"
-                  }
-                />
-
-                <InfoRow
-                  label="Serial Number"
-                  value={
-                    report.form?.serialNumber || "-"
-                  }
-                />
-
-                <InfoRow
-                  label="Battery Quantity"
-                  value={
-                    report.form?.batteryQuantity || "-"
-                  }
-                />
-
-                <InfoRow
-                  label="Temperature"
-                  value={
-                    report.form?.temperature
-                      ? `${report.form.temperature} °C`
-                      : "-"
-                  }
-                />
-
-                <InfoRow
-                  label="Ventilation"
-                  value={
-                    report.form?.ventilation || "-"
-                  }
-                />
-
-                <InfoRow
-                  label="Area Condition"
-                  value={
-                    report.form?.areaCondition || "-"
-                  }
-                />
-
-                <InfoRow
-                  label="Wiring"
-                  value={
-                    report.form?.wiring || "-"
-                  }
-                />
-
-                <InfoRow
-                  label="Notes"
-                  value={
-                    report.form?.notes || "-"
-                  }
-                />
-
-              </div>
-
-            </InfoBlock>
+            <SharedReportFields
+              form={form}
+              updateField={updateField}
+              updateNestedField={updateNestedField}
+              readOnly
+            />
 
             <InfoBlock title="Digital Signatures">
 
@@ -4535,12 +4468,7 @@ function ReportDetail({
                   <div className="signatureQrTitle">
                     <span>Technician</span>
 
-                    <small>
-                      {report.technicianSigned
-                        ? "SIGNED"
-                        : "SCAN TO SIGN"}
-                    </small>
-                  </div>
+                      </div>
 
                   {report.technicianSigned &&
                   report.technicianSignature ? (
@@ -4557,7 +4485,7 @@ function ReportDetail({
 
                     <QRCodeCanvas
                       value={
-                        `http://${NETWORK_HOST}:${NETWORK_PORT}/sign/technician/${report.id}`
+                        getSignUrl("technician", report.id)
                       }
                       size={150}
                       includeMargin
@@ -4590,12 +4518,7 @@ function ReportDetail({
                   <div className="signatureQrTitle">
                     <span>Vendor</span>
 
-                    <small>
-                      {report.clientSigned
-                        ? "SIGNED"
-                        : "SCAN TO SIGN"}
-                    </small>
-                  </div>
+                      </div>
 
                   {report.clientSigned &&
                   report.clientSignature ? (
@@ -4612,7 +4535,7 @@ function ReportDetail({
 
                     <QRCodeCanvas
                       value={
-                        `http://${NETWORK_HOST}:${NETWORK_PORT}/sign/client/${report.id}`
+                        getSignUrl("client", report.id)
                       }
                       size={150}
                       includeMargin
@@ -4785,367 +4708,11 @@ function ReportDetail({
 
             </InfoBlock>
 
-            <InfoBlock title="Product">
-
-              <div className="adminEditGrid">
-
-                <EditableField
-                  label="Product"
-                  value={form.product}
-                  onChange={(value) =>
-                    updateField(
-                      "product",
-                      value
-                    )
-                  }
-                />
-
-                <EditableField
-                  label="Model"
-                  value={form.model}
-                  onChange={(value) =>
-                    updateField(
-                      "model",
-                      value
-                    )
-                  }
-                />
-
-                <EditableField
-                  label="Type / Form"
-                  value={form.typeForm}
-                  onChange={(value) =>
-                    updateField(
-                      "typeForm",
-                      value
-                    )
-                  }
-                />
-
-                <EditableField
-                  label="Serial Number"
-                  value={form.serialNumber}
-                  onChange={(value) =>
-                    updateField(
-                      "serialNumber",
-                      value
-                    )
-                  }
-                />
-
-                <EditableField
-                  label="Battery Type"
-                  value={form.batteryType}
-                  onChange={(value) =>
-                    updateField(
-                      "batteryType",
-                      value
-                    )
-                  }
-                />
-
-                <EditableField
-                  label="Battery Quantity"
-                  value={form.batteryQuantity}
-                  onChange={(value) =>
-                    updateField(
-                      "batteryQuantity",
-                      value
-                    )
-                  }
-                />
-
-              </div>
-
-            </InfoBlock>
-
-            <InfoBlock title="Work & Environment">
-
-              <div className="adminEditGrid">
-
-                <EditableField
-                  label="Work Status"
-                  value={form.workStatus}
-                  onChange={(value) =>
-                    updateField(
-                      "workStatus",
-                      value
-                    )
-                  }
-                />
-
-                <EditableField
-                  label="Repair No."
-                  value={form.repairNo}
-                  onChange={(value) =>
-                    updateField(
-                      "repairNo",
-                      value
-                    )
-                  }
-                />
-
-                <EditableField
-                  label="Temperature (°C)"
-                  value={form.temperature}
-                  onChange={(value) =>
-                    updateField(
-                      "temperature",
-                      value
-                    )
-                  }
-                />
-
-                <SelectField
-                  label="Ventilation"
-                  value={form.ventilation}
-                  options={[
-                    "Good",
-                    "Fair",
-                    "Poor",
-                  ]}
-                  onChange={(value) =>
-                    updateField(
-                      "ventilation",
-                      value
-                    )
-                  }
-                />
-
-                <SelectField
-                  label="Area Condition"
-                  value={form.areaCondition}
-                  options={[
-                    "Clean",
-                    "Needs Cleaning",
-                    "Poor",
-                  ]}
-                  onChange={(value) =>
-                    updateField(
-                      "areaCondition",
-                      value
-                    )
-                  }
-                />
-
-                <SelectField
-                  label="Wiring"
-                  value={form.wiring}
-                  options={[
-                    "Good",
-                    "Needs Attention",
-                    "Poor",
-                  ]}
-                  onChange={(value) =>
-                    updateField(
-                      "wiring",
-                      value
-                    )
-                  }
-                />
-
-                <SelectField
-                  label="Fan Rotation"
-                  value={form.fanRotation}
-                  options={[
-                    "Good",
-                    "Fair",
-                    "Poor",
-                  ]}
-                  onChange={(value) =>
-                    updateField(
-                      "fanRotation",
-                      value
-                    )
-                  }
-                />
-
-                <EditableField
-                  label="Load Application"
-                  value={form.loadApplication}
-                  onChange={(value) =>
-                    updateField(
-                      "loadApplication",
-                      value
-                    )
-                  }
-                />
-
-                <EditableField
-                  label="Parts Used"
-                  value={form.partsUsed}
-                  onChange={(value) =>
-                    updateField(
-                      "partsUsed",
-                      value
-                    )
-                  }
-                />
-
-                <EditableField
-                  label="Replacement Recommended"
-                  value={
-                    form.partsReplacementRecommended
-                  }
-                  onChange={(value) =>
-                    updateField(
-                      "partsReplacementRecommended",
-                      value
-                    )
-                  }
-                />
-
-              </div>
-
-            </InfoBlock>
-
-            <InfoBlock title="Measurements">
-
-              <div className="adminEditGrid">
-
-                {[
-                  ["Input R-S", "inputVoltage", "rs"],
-                  ["Input S-T", "inputVoltage", "st"],
-                  ["Input T-R", "inputVoltage", "tr"],
-                  ["Input R-N", "inputVoltage", "rn"],
-                  ["Input S-N", "inputVoltage", "sn"],
-                  ["Input T-N", "inputVoltage", "tn"],
-                  ["Input Frequency", "inputVoltage", "frequency"],
-                  ["Output R-S", "outputVoltage", "rs"],
-                  ["Output S-T", "outputVoltage", "st"],
-                  ["Output T-R", "outputVoltage", "tr"],
-                  ["Output R-N", "outputVoltage", "rn"],
-                  ["Output S-N", "outputVoltage", "sn"],
-                  ["Output T-N", "outputVoltage", "tn"],
-                  ["Output Frequency", "outputVoltage", "frequency"],
-                  ["Input Current R", "inputCurrent", "r"],
-                  ["Input Current S", "inputCurrent", "s"],
-                  ["Input Current T", "inputCurrent", "t"],
-                  ["Output Current R", "outputCurrent", "r"],
-                  ["Output Current S", "outputCurrent", "s"],
-                  ["Output Current T", "outputCurrent", "t"],
-                ].map(
-                  ([label, group, field]) => (
-                    <EditableField
-                      key={
-                        group + "-" + field
-                      }
-                      label={label}
-                      value={
-                        form[group]?.[field] || ""
-                      }
-                      onChange={(value) =>
-                        updateNestedField(
-                          group,
-                          field,
-                          value
-                        )
-                      }
-                    />
-                  )
-                )}
-
-                <EditableField
-                  label="DC Bus Voltage"
-                  value={form.dcBusVoltage}
-                  onChange={(value) =>
-                    updateField(
-                      "dcBusVoltage",
-                      value
-                    )
-                  }
-                />
-
-                <EditableField
-                  label="Battery Charge Voltage"
-                  value={form.batteryChargeVoltage}
-                  onChange={(value) =>
-                    updateField(
-                      "batteryChargeVoltage",
-                      value
-                    )
-                  }
-                />
-
-                <EditableField
-                  label="Battery Total Voltage"
-                  value={form.batteryTotalVoltage}
-                  onChange={(value) =>
-                    updateField(
-                      "batteryTotalVoltage",
-                      value
-                    )
-                  }
-                />
-
-                <EditableField
-                  label="Battery Charge Current"
-                  value={form.batteryChargeCurrent}
-                  onChange={(value) =>
-                    updateField(
-                      "batteryChargeCurrent",
-                      value
-                    )
-                  }
-                />
-
-                <EditableField
-                  label="Ground Voltage"
-                  value={form.groundVoltage}
-                  onChange={(value) =>
-                    updateField(
-                      "groundVoltage",
-                      value
-                    )
-                  }
-                />
-
-                <EditableField
-                  label="Low Batteries"
-                  value={form.lowBatteries}
-                  onChange={(value) =>
-                    updateField(
-                      "lowBatteries",
-                      value
-                    )
-                  }
-                />
-
-              </div>
-
-            </InfoBlock>
-
-            <InfoBlock title="Notes / Action Taken">
-
-              <textarea
-                className="reportTextarea"
-                value={form.notes || ""}
-                placeholder="Write notes..."
-                onChange={(e) =>
-                  updateField(
-                    "notes",
-                    e.target.value
-                  )
-                }
-              />
-
-              <textarea
-                className="reportTextarea"
-                value={
-                  form.actionsTaken?.others ||
-                  ""
-                }
-                placeholder="Other actions taken..."
-                onChange={(e) =>
-                  updateNestedField(
-                    "actionsTaken",
-                    "others",
-                    e.target.value
-                  )
-                }
-              />
-
-            </InfoBlock>
+            <SharedReportFields
+              form={form}
+              updateField={updateField}
+              updateNestedField={updateNestedField}
+            />
 
             <div className="adminReportActions">
 
