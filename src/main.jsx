@@ -9,7 +9,7 @@ import {
 } from "firebase/firestore";
 const NETWORK_HOST = "192.168.56.1";
 const NETWORK_PORT = "5173";
-const PUBLIC_APP_URL = "https://erep.vercel.app";
+const PUBLIC_APP_URL = "https://ereport-beta.vercel.app";
 
 const getSignUrl = (role, reportId) =>
   `${PUBLIC_APP_URL}/sign/${role}/${encodeURIComponent(reportId)}`;
