@@ -65,6 +65,7 @@ import "./notification.css";
 import "./style_admin_vendor_full.css";
 import "./style_sidebar_toggle.css";
 import "./style_account_password.css";
+import "./signature.css";
 
 
 /* =========================================================

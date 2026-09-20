@@ -1,0 +1,302 @@
+/* =========================
+   SIGNATURE / APPROVAL PAGE
+   ========================= */
+
+.sign-page {
+  min-height: 100vh;
+  background: #f5f7f8;
+  padding: 32px 20px 40px;
+  box-sizing: border-box;
+  color: #20282c;
+}
+
+.sign-container {
+  width: 100%;
+  max-width: 720px;
+  margin: 0 auto;
+}
+
+.sign-eyebrow {
+  margin: 0 0 8px;
+  font-size: 12px;
+  font-weight: 600;
+  letter-spacing: 0.08em;
+  color: #68757b;
+  text-transform: uppercase;
+}
+
+.sign-title {
+  margin: 0;
+  font-size: 32px;
+  line-height: 1.15;
+  font-weight: 700;
+  color: #1f292d;
+}
+
+.sign-description {
+  margin: 12px 0 24px;
+  font-size: 15px;
+  line-height: 1.6;
+  color: #68757b;
+}
+
+
+/* REPORT INFORMATION */
+
+.sign-report-card {
+  background: #ffffff;
+  border: 1px solid #dfe4e6;
+  border-radius: 12px;
+  padding: 20px;
+  margin-bottom: 20px;
+}
+
+.sign-report-row {
+  display: grid;
+  grid-template-columns: 140px 1fr;
+  gap: 12px;
+  padding: 10px 0;
+  border-bottom: 1px solid #edf0f1;
+}
+
+.sign-report-row:last-child {
+  border-bottom: none;
+}
+
+.sign-report-label {
+  font-size: 12px;
+  font-weight: 600;
+  color: #7a858a;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+}
+
+.sign-report-value {
+  font-size: 14px;
+  font-weight: 600;
+  color: #252f33;
+  word-break: break-word;
+}
+
+
+/* SIGNATURE CARD */
+
+.signature-card {
+  background: #ffffff;
+  border: 1px solid #dfe4e6;
+  border-radius: 12px;
+  overflow: hidden;
+}
+
+.signature-card-header {
+  padding: 18px 20px;
+  border-bottom: 1px solid #e8ecee;
+}
+
+.signature-card-label {
+  margin: 0 0 5px;
+  font-size: 11px;
+  font-weight: 600;
+  color: #8a9499;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+.signature-card-title {
+  margin: 0;
+  font-size: 16px;
+  font-weight: 650;
+  color: #20282c;
+}
+
+
+/* CANVAS AREA */
+
+.signature-area {
+  padding: 16px;
+}
+
+.signature-canvas-wrapper {
+  position: relative;
+  width: 100%;
+  height: 260px;
+  border: 1px solid #d7dddf;
+  border-radius: 8px;
+  background: #ffffff;
+  overflow: hidden;
+}
+
+.signature-canvas {
+  display: block;
+  width: 100%;
+  height: 100%;
+  touch-action: none;
+  cursor: crosshair;
+}
+
+.signature-line {
+  position: absolute;
+  left: 24px;
+  right: 24px;
+  bottom: 62px;
+  height: 1px;
+  background: #cfd6d9;
+  pointer-events: none;
+}
+
+.signature-hint {
+  position: absolute;
+  left: 24px;
+  bottom: 24px;
+  margin: 0;
+  font-size: 12px;
+  color: #8a9499;
+  pointer-events: none;
+}
+
+
+/* ACTIONS */
+
+.signature-actions {
+  display: flex;
+  gap: 10px;
+  margin-top: 14px;
+}
+
+.signature-clear {
+  height: 42px;
+  padding: 0 18px;
+  border: 1px solid #d5dcdf;
+  border-radius: 7px;
+  background: #ffffff;
+  color: #4e5a5f;
+  font-size: 14px;
+  font-weight: 600;
+  cursor: pointer;
+}
+
+.signature-clear:hover {
+  background: #f5f7f8;
+}
+
+.signature-submit {
+  width: 100%;
+  height: 46px;
+  margin-top: 14px;
+  border: none;
+  border-radius: 7px;
+  background: #1f5f72;
+  color: #ffffff;
+  font-size: 14px;
+  font-weight: 600;
+  cursor: pointer;
+}
+
+.signature-submit:hover {
+  background: #174d5d;
+}
+
+.signature-submit:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+
+/* MOBILE */
+
+@media (max-width: 600px) {
+
+  .sign-page {
+    padding: 22px 14px 32px;
+  }
+
+  .sign-container {
+    max-width: 100%;
+  }
+
+  .sign-eyebrow {
+    font-size: 10px;
+    margin-bottom: 6px;
+  }
+
+  .sign-title {
+    font-size: 26px;
+  }
+
+  .sign-description {
+    margin: 10px 0 18px;
+    font-size: 14px;
+    line-height: 1.5;
+  }
+
+  .sign-report-card {
+    padding: 14px 16px;
+    border-radius: 10px;
+    margin-bottom: 14px;
+  }
+
+  .sign-report-row {
+    display: block;
+    padding: 9px 0;
+  }
+
+  .sign-report-label {
+    display: block;
+    margin-bottom: 3px;
+    font-size: 10px;
+  }
+
+  .sign-report-value {
+    display: block;
+    font-size: 14px;
+    line-height: 1.4;
+  }
+
+  .signature-card {
+    border-radius: 10px;
+  }
+
+  .signature-card-header {
+    padding: 15px 16px;
+  }
+
+  .signature-card-title {
+    font-size: 15px;
+  }
+
+  .signature-area {
+    padding: 12px;
+  }
+
+  .signature-canvas-wrapper {
+    height: 220px;
+    border-radius: 7px;
+  }
+
+  .signature-line {
+    left: 18px;
+    right: 18px;
+    bottom: 55px;
+  }
+
+  .signature-hint {
+    left: 18px;
+    bottom: 18px;
+    font-size: 11px;
+  }
+
+  .signature-actions {
+    margin-top: 10px;
+  }
+
+  .signature-clear {
+    width: 100%;
+    height: 40px;
+  }
+
+  .signature-submit {
+    height: 44px;
+    margin-top: 10px;
+    font-size: 14px;
+  }
+}
