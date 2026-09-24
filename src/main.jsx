@@ -1329,7 +1329,7 @@ function App() {
                 size={16}
               />
             }
-            text="Technicians"
+            text="Role"
           />
 
         </>
@@ -4985,6 +4985,9 @@ function ClientSigningPage({
   const [signature, setSignature] =
     useState("");
 
+  const [clearSignatureTrigger, setClearSignatureTrigger] =
+    useState(0);
+
   const [loading, setLoading] =
     useState(true);
 
@@ -5296,7 +5299,19 @@ function ClientSigningPage({
         <SignaturePad
           value={signature}
           setValue={setSignature}
+          clearTrigger={clearSignatureTrigger}
         />
+
+        <button
+          type="button"
+          className="signature-clear"
+          onClick={() => {
+            setSignature("");
+            setClearSignatureTrigger((prev) => prev + 1);
+          }}
+        >
+          Clear
+        </button>
 
         <button
           className="signSubmit"
@@ -5453,6 +5468,12 @@ function UsersPage({
         account.role === "Admin"
     );
 
+  const vendors =
+    accounts.filter(
+      (account) =>
+        account.role === "Vendor"
+    );
+
   const [search, setSearch] =
     useState("");
 
@@ -5474,6 +5495,15 @@ function UsersPage({
         )
     );
 
+  const visibleVendors =
+    vendors.filter((account) =>
+      `${account.name} ${account.email}`
+        .toLowerCase()
+        .includes(
+          search.toLowerCase()
+        )
+    );
+
   return (
     <div className="content">
 
@@ -5483,23 +5513,13 @@ function UsersPage({
         action={
           <div className="topActions">
             <button
-              className="saveButton"
-              onClick={() =>
-                openAdd("Admin")
-              }
-            >
-              <UserPlus size={14} />
-              Add Admin
-            </button>
-
-            <button
               className="darkButton"
               onClick={() =>
                 openAdd("User")
               }
             >
               <UserPlus size={14} />
-              Add Technician
+              Add Role
             </button>
           </div>
         }
@@ -5524,9 +5544,7 @@ function UsersPage({
       <div className="sectionHeader">
         <small>TEAM</small>
         <h2>Technician accounts</h2>
-        <p>
-          Admin can create, edit, and remove technician accounts.
-        </p>
+  
       </div>
 
       <div className="userList">
@@ -5591,11 +5609,75 @@ function UsersPage({
         className="sectionHeader"
         style={{ marginTop: "28px" }}
       >
+        <small>VENDORS</small>
+        <h2>Vendor accounts</h2>
+        
+      </div>
+
+      <div className="userList">
+
+        {visibleVendors.map(
+          (account) => (
+
+            <div
+              className="userRow"
+              key={account.id}
+            >
+
+              <div className="vendorIcon">
+                <Building2 size={17} />
+              </div>
+
+              <div className="userMain">
+                <b>{account.name}</b>
+                <span>{account.email}</span>
+              </div>
+
+              <span className="roleBadge">
+                Vendor
+              </span>
+
+              <div className="rowActions">
+
+                <button
+                  type="button"
+                  onClick={() =>
+                    openEdit(account)
+                  }
+                >
+                  <Pencil size={13} />
+                </button>
+
+                <button
+                  type="button"
+                  onClick={() =>
+                    onDelete(account)
+                  }
+                >
+                  <Trash2 size={13} />
+                </button>
+
+              </div>
+
+            </div>
+
+          )
+        )}
+
+        {visibleVendors.length === 0 && (
+          <div className="empty">
+            Belum ada vendor.
+          </div>
+        )}
+
+      </div>
+
+      <div
+        className="sectionHeader"
+        style={{ marginTop: "28px" }}
+      >
         <small>ADMINISTRATORS</small>
         <h2>Admin accounts</h2>
-        <p>
-          Admin can manage administrator access from here.
-        </p>
       </div>
 
       <div className="userList">
@@ -6461,7 +6543,7 @@ const submit = (e) => {
             >
               {initialAccount
                 ? "Save Changes"
-                : "Create Account"}
+                : "Add account"}
             </button>
 
           </div>
